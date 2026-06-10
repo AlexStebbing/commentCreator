@@ -353,7 +353,6 @@ DARK
 
 </div>
 <label>Instructor</label><input id="instructor" placeholder="Enter instructor">
-    
 <label>Kid's Name</label><input id="name" placeholder="Enter name">
 
 
@@ -1191,10 +1190,6 @@ return {
 
 function saveStudent(){
 
-if(editingStudentIndex !== null){
-    generateComment();
-}
-
 const student =
 getCurrentStudentData();
 
@@ -1446,12 +1441,12 @@ fieldBoxes[slot];
 const prefix =
 `student_${studentIndex + 1}`;
 
-addField(page,`${prefix}_name`,student.name,box.name,8,false);
-addField(page,`${prefix}_level`,student.level,box.level,8,false);
-addField(page,`${prefix}_instructor`,student.instructor,box.instructor,8,false);
-addField(page,`${prefix}_date`,`${student.season} ${student.year}`,box.date,8,false);
-addField(page,`${prefix}_next`,student.nextLevel,box.next,8,false);
-addField(page,`${prefix}_comment`,student.comment,box.comment,7,true);
+addField(page,`${prefix}_name`,student.name,box.name,10,false);
+addField(page,`${prefix}_level`,student.level,box.level,10,false);
+addField(page,`${prefix}_instructor`,student.instructor,box.instructor,10,false);
+addField(page,`${prefix}_date`,`${student.season} ${student.year}`,box.date,10,false);
+addField(page,`${prefix}_next`,student.nextLevel,box.next,10,false);
+addField(page,`${prefix}_comment`,student.comment,box.comment,11,true);
 
 }
 
