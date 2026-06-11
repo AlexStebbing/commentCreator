@@ -109,39 +109,27 @@ gap:10px;
 
 .slider{
     position:absolute;
-
     top:0;
     left:0;
     right:0;
     bottom:0;
-
     background:#555;
-
     border-radius:34px;
-
     cursor:pointer;
-
     transition:.25s;
 }
 
 .slider::before{
 
     content:"";
-
     position:absolute;
-
     width:26px;
     height:26px;
-
     left:4px;
     bottom:4px;
-
     background:white;
-
     border-radius:50%;
-
     transition:.25s;
-
 }
 
 input:checked + .slider{
@@ -175,25 +163,16 @@ body.light button{
 }
 
 .result-toggle{
-
 position:absolute;
-
 top:70px;
-
 left:20px;
-
 display:flex;
-
 align-items:center;
-
 gap:10px;
-
 }
 
 #resultLabel{
-
 font-weight:bold;
-
 }
 
 .hidden{
@@ -350,12 +329,9 @@ PASS
 <span id="themeLabel">
 DARK
 </span>
-
 </div>
 <label>Instructor</label><input id="instructor" placeholder="Enter instructor">
 <label>Kid's Name</label><input id="name" placeholder="Enter name">
-
-
 <div class="row">
     <div>
         <label>Season</label>
@@ -372,8 +348,6 @@ DARK
         <select id="year"></select>
     </div>
 </div>
-
-
 <label>Swim Level</label>
 <select id="level" onchange="updateMenus()"></select>
 <label>Nice thing #1</label>
@@ -382,24 +356,18 @@ DARK
 <label>Work on #1</label><select class="work"></select>
 <label>Work on #2</label><select class="work"></select>
 </div>
-
 <div id="failOnly">
 <label>Work on #3</label>
 <select class="work" id="work3"></select>
 </div>
-
 <div id="passOnly">
-
 <label>Nice thing #2</label>
 <select id="positive2"></select>
-
 </div>
-
 <button onclick="generateComment()">Generate Comment</button>
 <button onclick="copyComment()" type="button">Copy Comment</button>
 <button onclick="saveStudent()" type="button" id="saveStudentButton">Save Student</button>
 <textarea id="output" placeholder="Generated comment will appear here"></textarea>
-
 <div class="saved-tab">
 <div class="saved-header">
 <h2>Saved Students</h2>
@@ -407,7 +375,6 @@ DARK
 </div>
 <div id="studentList" class="student-grid"></div>
 </div>
-
 <button onclick="exportPDF()" type="button">Export PDF</button>
 <script>
 
@@ -441,337 +408,338 @@ let editingStudentIndex = null;
 
 const levels={
 "preschool1":{name:"Preschool 1",workOn:[
-{short:"Front float arms",full:"make sure your arms are at the top of the water and out like a star."},
-{short:"Front float legs",full:"make sure your legs are straight and at the top of the water."},
-{short:"Front float face",full:"practice putting your whole face in the water."},
-{short:"Front float body",full:"ensure you are relaxed and your whole body is near the surface of the water."},
-{short:"Back float arms",full:"make sure your arms are at the top of the water and out like a star."},
-{short:"Back float legs",full:"make sure your legs are straight at the top of the water."},
-{short:"Back float body",full:"ensure your ears are in the water and your whole body is near the surface of the water."},
-{short:"Front glide arms",full:"ensure your arms are straight in front of your head and at the top of the water."},
-{short:"Front glide legs",full:"make sure your legs are straight and touching at the top of the water."},
-{short:"Front glide face",full:"practice putting your whole face in the water."},
-{short:"Front glide body",full:"make sure you are relaxed and your whole body is near the surface of the water."},
-{short:"Back glide arms",full:"make sure your arms are by your side."},
-{short:"Back glide legs",full:"make sure your legs are straight and touching at the top of the water."},
-{short:"Back glide body",full:"ensure your ears are in the water and your whole body is near the surface of the water."}]},
+{short:"Front float arms",full:"make sure your arms are at the top of the water and out like a star.",nice:"float. You showed good control with your arm position and movement."},
+{short:"Front float legs",full:"make sure your legs are straight and at the top of the water.",nice:"float. You showed strong effort with your leg action and kicking."},
+{short:"Front float face",full:"practice putting your whole face in the water.",nice:"float. You showed good effort with your breathing and face position in the water."},
+{short:"Front float body",full:"ensure you are relaxed and your whole body is near the surface of the water.",nice:"float. You showed good body position and control in the water."},
+{short:"Back float arms",full:"make sure your arms are at the top of the water and out like a star.",nice:"float. You showed good control with your arm position and movement."},
+{short:"Back float legs",full:"make sure your legs are straight at the top of the water.",nice:"float. You showed strong effort with your leg action and kicking."},
+{short:"Back float body",full:"ensure your ears are in the water and your whole body is near the surface of the water.",nice:"float. You showed good body position and control in the water."},
+{short:"Front glide arms",full:"ensure your arms are straight in front of your head and at the top of the water.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Front glide legs",full:"make sure your legs are straight and touching at the top of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Front glide face",full:"practice putting your whole face in the water.",nice:"glide. You showed good effort with your breathing and face position in the water."},
+{short:"Front glide body",full:"make sure you are relaxed and your whole body is near the surface of the water.",nice:"glide. You showed good body position and control in the water."},
+{short:"Back glide arms",full:"make sure your arms are by your side.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Back glide legs",full:"make sure your legs are straight and touching at the top of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Back glide body",full:"ensure your ears are in the water and your whole body is near the surface of the water.",nice:"glide. You showed good body position and control in the water."}]},
 
 "preschool2":{name:"Preschool 2",workOn:[
-{short:"Front float aid arms",full:"make sure your arms are at the top of the water and out like a star."},
-{short:"Front float aid legs",full:"make sure your legs are straight and at the top of the water."},
-{short:"Front float bubbles",full:"practice putting your whole face in the water and blowing bubbles."},
-{short:"Front float aid body",full:"make sure you are relaxed and your whole body is near the surface of the water."},
-{short:"Back float aid arms",full:"make sure your arms are at the top of the water and out like a star."},
-{short:"Back float aid legs",full:"make sure your legs are straight and at the top of the water."},
-{short:"Back float aid body",full:"ensure your ears are in the water and your whole body is near the surface of the water."},
-{short:"Roll front-back arms",full:"ensure your arms are near the surface of the water."},
-{short:"Roll front-back legs",full:"make sure your legs are straight and at the top of the water."},
-{short:"Roll front-back body",full:"make sure you put your ears in the water right away and your belly is at the top of the water."},
-{short:"Roll back-front arms",full:"ensure your arms are near the surface of the water."},
-{short:"Roll back-front legs",full:"make sure your legs are straight and at the top of the water."},
-{short:"Roll back-front breathing",full:"make sure to look down at the floor and blow your bubbles right away."},
-{short:"Roll back-front body",full:"make sure to put your whole face in the water and blow bubbles with your body at the surface."},
-{short:"Back glide arms",full:"make sure your arms are at your side."},
-{short:"Back glide legs",full:"make sure your legs are straight and touching at the top of the water."},
-{short:"Back glide body",full:"ensure your ears are in the water and your whole body is near the surface of the water."},
-{short:"Front glide arms",full:"ensure your arms are straight in front of your head and at the top of the water."},
-{short:"Front glide legs",full:"make sure your legs are straight and touching at the top of the water."},
-{short:"Front glide bubbles",full:"practice putting your whole face in the water and blowing bubbles."},
-{short:"Front glide body",full:"make sure you are relaxed and your whole body is near the surface of the water."},
-{short:"Back flutter kick legs",full:"ensure both legs are always kicking up and down."}]},
+{short:"Front float aid arms",full:"make sure your arms are at the top of the water and out like a star.",nice:"float. You showed good control with your arm position and movement."},
+{short:"Front float aid legs",full:"make sure your legs are straight and at the top of the water.",nice:"float. You showed strong effort with your leg action and kicking."},
+{short:"Front float bubbles",full:"practice putting your whole face in the water and blowing bubbles.",nice:"float. You showed good effort with your breathing and face position in the water."},
+{short:"Front float aid body",full:"make sure you are relaxed and your whole body is near the surface of the water.",nice:"float. You showed good body position and control in the water."},
+{short:"Back float aid arms",full:"make sure your arms are at the top of the water and out like a star.",nice:"float. You showed good control with your arm position and movement."},
+{short:"Back float aid legs",full:"make sure your legs are straight and at the top of the water.",nice:"float. You showed strong effort with your leg action and kicking."},
+{short:"Back float aid body",full:"ensure your ears are in the water and your whole body is near the surface of the water.",nice:"float. You showed good body position and control in the water."},
+{short:"Roll front-back arms",full:"ensure your arms are near the surface of the water.",nice:"roll. You showed good control with your arm position and movement."},
+{short:"Roll front-back legs",full:"make sure your legs are straight and at the top of the water.",nice:"roll. You showed strong effort with your leg action and kicking."},
+{short:"Roll front-back body",full:"make sure you put your ears in the water right away and your belly is at the top of the water.",nice:"roll. You showed good body position and control in the water."},
+{short:"Roll back-front arms",full:"ensure your arms are near the surface of the water.",nice:"roll. You showed good control with your arm position and movement."},
+{short:"Roll back-front legs",full:"make sure your legs are straight and at the top of the water.",nice:"roll. You showed strong effort with your leg action and kicking."},
+{short:"Roll back-front breathing",full:"make sure to look down at the floor and blow your bubbles right away.",nice:"roll. You showed good effort with your breathing and face position in the water."},
+{short:"Roll back-front body",full:"make sure to put your whole face in the water and blow bubbles with your body at the surface.",nice:"roll. You showed good body position and control in the water."},
+{short:"Back glide arms",full:"make sure your arms are at your side.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Back glide legs",full:"make sure your legs are straight and touching at the top of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Back glide body",full:"ensure your ears are in the water and your whole body is near the surface of the water.",nice:"glide. You showed good body position and control in the water."},
+{short:"Front glide arms",full:"ensure your arms are straight in front of your head and at the top of the water.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Front glide legs",full:"make sure your legs are straight and touching at the top of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Front glide bubbles",full:"practice putting your whole face in the water and blowing bubbles.",nice:"glide. You showed good effort with your breathing and face position in the water."},
+{short:"Front glide body",full:"make sure you are relaxed and your whole body is near the surface of the water.",nice:"glide. You showed good body position and control in the water."},
+{short:"Back flutter kick legs",full:"ensure both legs are always kicking up and down.",nice:"flutter kick. You showed strong effort with your leg action and kicking."}]},
 
 "preschool3":{name:"Preschool 3",workOn:[
-{short:"Front float arms",full:"make sure your arms are at the top of the water and out like a star."},
-{short:"Front float legs",full:"make sure your legs are straight and at the top of the water."},
-{short:"Front float bubbles",full:"ensure your whole face is in the water and blow bubbles."},
-{short:"Front float body",full:"make sure to put your whole face in the water and your body is at the surface."},
-{short:"Back float arms",full:"make sure your arms are at the top of the water and out like a star."},
-{short:"Back float legs",full:"make sure your legs are straight and at the top of the water."},
-{short:"Back float body",full:"ensure your ears are in the water and your whole body is near the surface of the water."},
-{short:"Roll front-back arms",full:"ensure your arms are near the surface of the water."},
-{short:"Roll front-back legs",full:"make sure your legs are straight and at the top of the water."},
-{short:"Roll front-back body",full:"make sure you put your ears in the water right away and your belly is at the top of the water."},
-{short:"Roll back-front arms",full:"ensure your arms are near the surface of the water."},
-{short:"Roll back-front legs",full:"ensure your legs are near the surface of the water."},
-{short:"Roll back-front breathing",full:"make sure to look down at the floor and blow your bubbles right away."},
-{short:"Roll back-front body",full:"make sure to put your whole face in the water and blow bubbles with your body at the surface."},
-{short:"Back glide arms",full:"make sure your arms are at your side."},
-{short:"Back glide legs",full:"make sure your legs are straight and touching at the top of the water."},
-{short:"Back glide body",full:"ensure your ears are in the water and your whole body is near the surface of the water."},
-{short:"Front glide arms",full:"ensure your arms are straight in front of your head and at the top of the water."},
-{short:"Front glide legs",full:"make sure your legs are straight and touching at the top of the water."},
-{short:"Front glide face",full:"practice putting your whole face in the water."},
-{short:"Front glide body",full:"make sure you are relaxed and your whole body is near the surface of the water."},
-{short:"Back flutter legs",full:"ensure both legs are always kicking up and down."},
-{short:"Back flutter body",full:"ensure your ears are in the water the whole time with your whole body near to the top of the water."},
-{short:"Front flutter arms",full:"ensure your arms are straight in front of your head and at the top of the water."},
-{short:"Front flutter legs",full:"ensure both legs are always kicking up and down."},
-{short:"Front flutter bubbles",full:"look down with your whole face in the water and blow your bubbles."},
-{short:"Front flutter body",full:"make sure to put your whole face in the water and your body is at the surface."}]},
+{short:"Front float arms",full:"make sure your arms are at the top of the water and out like a star.",nice:"float. You showed good control with your arm position and movement."},
+{short:"Front float legs",full:"make sure your legs are straight and at the top of the water.",nice:"float. You showed strong effort with your leg action and kicking."},
+{short:"Front float bubbles",full:"ensure your whole face is in the water and blow bubbles.",nice:"float. You showed good effort with your breathing and face position in the water."},
+{short:"Front float body",full:"make sure to put your whole face in the water and your body is at the surface.",nice:"float. You showed good body position and control in the water."},
+{short:"Back float arms",full:"make sure your arms are at the top of the water and out like a star.",nice:"float. You showed good control with your arm position and movement."},
+{short:"Back float legs",full:"make sure your legs are straight and at the top of the water.",nice:"float. You showed strong effort with your leg action and kicking."},
+{short:"Back float body",full:"ensure your ears are in the water and your whole body is near the surface of the water.",nice:"float. You showed good body position and control in the water."},
+{short:"Roll front-back arms",full:"ensure your arms are near the surface of the water.",nice:"roll. You showed good control with your arm position and movement."},
+{short:"Roll front-back legs",full:"make sure your legs are straight and at the top of the water.",nice:"roll. You showed strong effort with your leg action and kicking."},
+{short:"Roll front-back body",full:"make sure you put your ears in the water right away and your belly is at the top of the water.",nice:"roll. You showed good body position and control in the water."},
+{short:"Roll back-front arms",full:"ensure your arms are near the surface of the water.",nice:"roll. You showed good control with your arm position and movement."},
+{short:"Roll back-front legs",full:"ensure your legs are near the surface of the water.",nice:"roll. You showed strong effort with your leg action and kicking."},
+{short:"Roll back-front breathing",full:"make sure to look down at the floor and blow your bubbles right away.",nice:"roll. You showed good effort with your breathing and face position in the water."},
+{short:"Roll back-front body",full:"make sure to put your whole face in the water and blow bubbles with your body at the surface.",nice:"roll. You showed good body position and control in the water."},
+{short:"Back glide arms",full:"make sure your arms are at your side.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Back glide legs",full:"make sure your legs are straight and touching at the top of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Back glide body",full:"ensure your ears are in the water and your whole body is near the surface of the water.",nice:"glide. You showed good body position and control in the water."},
+{short:"Front glide arms",full:"ensure your arms are straight in front of your head and at the top of the water.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Front glide legs",full:"make sure your legs are straight and touching at the top of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Front glide face",full:"practice putting your whole face in the water.",nice:"glide. You showed good effort with your breathing and face position in the water."},
+{short:"Front glide body",full:"make sure you are relaxed and your whole body is near the surface of the water.",nice:"glide. You showed good body position and control in the water."},
+{short:"Back flutter legs",full:"ensure both legs are always kicking up and down.",nice:"flutter kick. You showed strong effort with your leg action and kicking."},
+{short:"Back flutter body",full:"ensure your ears are in the water the whole time with your whole body near to the top of the water.",nice:"flutter kick. You showed good body position and control in the water."},
+{short:"Front flutter arms",full:"ensure your arms are straight in front of your head and at the top of the water.",nice:"flutter kick. You showed good control with your arm position and movement."},
+{short:"Front flutter legs",full:"ensure both legs are always kicking up and down.",nice:"flutter kick. You showed strong effort with your leg action and kicking."},
+{short:"Front flutter bubbles",full:"look down with your whole face in the water and blow your bubbles.",nice:"flutter kick. You showed good effort with your breathing and face position in the water."},
+{short:"Front flutter body",full:"make sure to put your whole face in the water and your body is at the surface.",nice:"flutter kick. You showed good body position and control in the water."}]},
 
 "preschool4":{name:"Preschool 4",workOn:[
-{short:"Tread arms",full:"make sure your arms are always moving back and forth."},
-{short:"Tread legs",full:"make sure your legs are always doing big kicks, like you are riding a bike."},
-{short:"Tread breathing",full:"ensure your mouth and nose are always above the surface the whole time."},
-{short:"Roll swim arms",full:"make sure your arms are at the top of the water and out like a star."},
-{short:"Roll swim legs",full:"make sure your legs are at the top of the water."},
-{short:"Roll swim body",full:"ensure your ears are in the water and your whole body is near the surface of the water and start kicking."},
-{short:"Side glide arms",full:"make sure both arms are straight, one arm at your side and one above your head."},
-{short:"Side glide legs",full:"ensure your legs are straight and near the surface of the water."},
-{short:"Side glide body",full:"make sure your body is on its side and your head is resting on your arm, ear touching arm."},
-{short:"Front flutter arms",full:"ensure your arms are straight in front of your head and at the top of the water."},
-{short:"Front flutter legs",full:"make sure both legs are continuously kicking up and down."},
-{short:"Front flutter bubbles",full:"make sure to look down at the floor and blow your bubbles."},
-{short:"Front flutter body",full:"make sure to put your whole face in the water and blow bubbles with your body at the surface."},
-{short:"Back flutter arms",full:"make sure your arms are at your side."},
-{short:"Back flutter legs",full:"make sure both legs are continuously kicking up and down."},
-{short:"Back flutter body",full:"ensure your ears are in the water and your whole body is near the surface of the water."},
-{short:"Side flutter arms",full:"make sure both arms are straight, one arm at your side and one above your head."},
-{short:"Side flutter legs",full:"ensure your legs are straight and touching at the top of the water."},
-{short:"Side flutter body",full:"make sure your body is on its side and your head is resting on your arm, ear touching arm."},
-{short:"PFD front crawl arms",full:"ensure both arms are always alternating."},
-{short:"PFD front crawl legs",full:"make sure both legs are continuously kicking."},
-{short:"PFD front crawl body",full:"remember to stay relaxed on your front and keep arms and legs moving continuously."}]},
+{short:"Tread arms",full:"make sure your arms are always moving back and forth.",nice:"treading. You showed good control with your arm position and movement."},
+{short:"Tread legs",full:"make sure your legs are always doing big kicks, like you are riding a bike.",nice:"treading. You showed strong effort with your leg action and kicking."},
+{short:"Tread breathing",full:"ensure your mouth and nose are always above the surface the whole time.",nice:"treading. You showed good effort with your breathing and face position in the water."},
+{short:"Roll swim arms",full:"make sure your arms are at the top of the water and out like a star.",nice:"roll. You showed good control with your arm position and movement."},
+{short:"Roll swim legs",full:"make sure your legs are at the top of the water.",nice:"roll. You showed strong effort with your leg action and kicking."},
+{short:"Roll swim body",full:"ensure your ears are in the water and your whole body is near the surface of the water and start kicking.",nice:"roll. You showed good body position and control in the water."},
+{short:"Side glide arms",full:"make sure both arms are straight, one arm at your side and one above your head.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Side glide legs",full:"ensure your legs are straight and near the surface of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Side glide body",full:"make sure your body is on its side and your head is resting on your arm, ear touching arm.",nice:"glide. You showed good body position and control in the water."},
+{short:"Front flutter arms",full:"ensure your arms are straight in front of your head and at the top of the water.",nice:"flutter kick. You showed good control with your arm position and movement."},
+{short:"Front flutter legs",full:"make sure both of your legs are continuously kicking up and down.",nice:"flutter kick. You showed strong effort with your leg action and kicking."},
+{short:"Front flutter bubbles",full:"make sure to look down at the floor and blow your bubbles.",nice:"flutter kick. You showed good effort with your breathing and face position in the water."},
+{short:"Front flutter body",full:"make sure to put your whole face in the water and blow bubbles with your body at the surface.",nice:"flutter kick. You showed good body position and control in the water."},
+{short:"Back flutter arms",full:"make sure your arms are at your side.",nice:"flutter kick. You showed good control with your arm position and movement."},
+{short:"Back flutter legs",full:"make sure both legs are continuously kicking up and down.",nice:"flutter kick. You showed strong effort with your leg action and kicking."},
+{short:"Back flutter body",full:"ensure your ears are in the water and your whole body is near the surface of the water.",nice:"flutter kick. You showed good body position and control in the water."},
+{short:"Side flutter arms",full:"make sure both arms are straight, one arm at your side and one above your head.",nice:"flutter kick. You showed good control with your arm position and movement."},
+{short:"Side flutter legs",full:"ensure your legs are straight and touching at the top of the water.",nice:"flutter kick. You showed strong effort with your leg action and kicking."},
+{short:"Side flutter body",full:"make sure your body is on its side and your head is resting on your arm, ear touching arm.",nice:"flutter kick. You showed good body position and control in the water."},
+{short:"PFD front crawl arms",full:"ensure both arms are always alternating.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"PFD front crawl legs",full:"make sure both legs are continuously kicking.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"PFD front crawl body",full:"remember to stay relaxed on your front and keep arms and legs moving continuously.",nice:"front crawl. You showed good body position and control in the water."}]},
 
 "preschool5":{name:"Preschool 5",workOn:[
-{short:"Tread arms",full:"make sure your arms are always moving back and forth."},
-{short:"Tread legs",full:"make sure your legs are always doing big kicks, like you are riding a bike."},
-{short:"Tread breathing",full:"ensure your mouth and nose are always above the surface the whole time."},
-{short:"Whip kick legs",full:"ensure both legs kick at the same time with knees close together and feet wide apart."},
-{short:"Whip kick body",full:"make sure your body is vertical, like you are sitting in a chair."},
-{short:"Front crawl arms",full:"make sure your arms are always alternating and reaching high out of the water."},
-{short:"Front crawl legs",full:"make sure both legs are continuously kicking up and down."},
-{short:"Front crawl bubbles",full:"make sure to look down at the floor and blow your bubbles."},
-{short:"Front crawl body",full:"make sure your body is on its front and blow bubbles with your body at the surface."},
-{short:"Back crawl arms",full:"make sure your arms are always alternating and reaching high out of the water."},
-{short:"Back crawl legs",full:"make sure both legs are continuously kicking up and down."},
-{short:"Back crawl body",full:"ensure your ears are in the water and your whole body is near the surface of the water."}]},
+{short:"Tread arms",full:"make sure your arms are always moving back and forth.",nice:"treading. You showed good control with your arm position and movement."},
+{short:"Tread legs",full:"make sure your legs are always doing big kicks, like you are riding a bike.",nice:"treading. You showed strong effort with your leg action and kicking."},
+{short:"Tread breathing",full:"ensure your mouth and nose are always above the surface the whole time.",nice:"treading. You showed good effort with your breathing and face position in the water."},
+{short:"Whip kick legs",full:"ensure both legs kick at the same time with knees close together and feet wide apart.",nice:"whip kick. You showed strong effort with your leg action and kicking."},
+{short:"Whip kick body",full:"make sure your body is vertical, like you are sitting in a chair.",nice:"whip kick. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl arms",full:"make sure your arms are always alternating and reaching high out of the water.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"Front crawl legs",full:"make sure both legs are continuously kicking up and down.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl bubbles",full:"make sure to look down at the floor and blow your bubbles.",nice:"front crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl body",full:"make sure your body is on its front and blow bubbles with your body at the surface.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"Back crawl arms",full:"make sure your arms are always alternating and reaching high out of the water.",nice:"back crawl. You showed good control with your arm position and movement."},
+{short:"Back crawl legs",full:"make sure both legs are continuously kicking up and down.",nice:"back crawl. You showed strong effort with your leg action and kicking."},
+{short:"Back crawl body",full:"ensure your ears are in the water and your whole body is near the surface of the water.",nice:"back crawl. You showed good body position and control in the water."}]},
 
 "swimmer1":{name:"Swimmer 1",workOn:[
-{short:"Front float arms",full:"ensure your arms are straight and at the surface of the water."},
-{short:"Front float legs",full:"ensure your legs are straight and at the surface of the water."},
-{short:"Front float bubbles",full:"ensure to blow bubbles with your whole face in the water for 5 seconds."},
-{short:"Front float body",full:"make sure to stay relaxed and look down at the floor with your whole face in the water."},
-{short:"Back float arms",full:"ensure your arms are straight and at the surface of the water."},
-{short:"Back float legs",full:"ensure your legs are straight and at the surface of the water."},
-{short:"Back float body",full:"make sure to stay relaxed with your ears in the water."},
-{short:"Roll front-back arms",full:"ensure your arms stay straight and at the surface of the water."},
-{short:"Roll front-back legs",full:"ensure your legs stay straight and at the surface of the water."},
-{short:"Roll front-back body",full:"make sure to put your ears in the water right away and ensure your body is at the surface."},
-{short:"Roll back-front arms",full:"ensure your arms stay straight and at the surface of the water."},
-{short:"Roll back-front legs",full:"ensure your legs stay straight and at the surface of the water."},
-{short:"Roll back-front breathing",full:"make sure to look down at the floor and blow your bubbles right away."},
-{short:"Roll back-front body",full:"make sure to put your whole face in the water and blow bubbles."},
-{short:"Front glide arms",full:"make sure your arms are extended beyond your head."},
-{short:"Front glide legs",full:"make sure your legs are together and straight at the surface of the water."},
-{short:"Front glide bubbles",full:"ensure that you blow bubbles with your whole face in the water."},
-{short:"Front glide body",full:"make sure to stay relaxed and look down at the floor with your whole face in the water."},
-{short:"Back glide arms",full:"make sure to keep your arms by your side."},
-{short:"Back glide legs",full:"ensure your legs are together and straight at the surface of the water."},
-{short:"Back glide body",full:"make sure to stay relaxed with your ears in the water and body at the surface of the water."},
-{short:"Side glide arms",full:"ensure your arms are straight, one at your head and one at your side."},
-{short:"Side glide legs",full:"ensure your legs are straight and near the surface of the water."},
-{short:"Side glide body",full:"make sure your body is on its side and your head is resting on your arm, ear touching arm."},
-{short:"Front flutter arms",full:"ensure your arms are extended beyond your head."},
-{short:"Front flutter legs",full:"make sure both legs are continuously alternating while kicking."},
-{short:"Front flutter bubbles",full:"ensure you are blowing bubbles with your whole face in the water."},
-{short:"Front flutter body",full:"ensure your whole body is near the surface of the water."},
-{short:"Back flutter arms",full:"make sure to keep your arms by your side."},
-{short:"Back flutter legs",full:"make sure both legs are continuously alternating while kicking."},
-{short:"Back flutter body",full:"ensure your whole body is near the surface of the water."},
-{short:"PFD front crawl arms",full:"ensure both arms are always alternating."},
-{short:"PFD front crawl legs",full:"make sure both legs are continuously alternating while kicking."},
-{short:"PFD front crawl body",full:"remember to stay relaxed on your front and keep arms and legs moving continuously."},
-{short:"PFD tread arms",full:"ensure your arms are continuously sculling, always moving back and forth."},
-{short:"PFD tread legs",full:"make sure your legs are always kicking."},
-{short:"PFD tread body",full:"ensure your body is vertical and nose and mouth are out of the water the whole time."}]},
+{short:"Front float arms",full:"ensure your arms are straight and at the surface of the water.",nice:"float. You showed good control with your arm position and movement."},
+{short:"Front float legs",full:"ensure your legs are straight and at the surface of the water.",nice:"float. You showed strong effort with your leg action and kicking."},
+{short:"Front float bubbles",full:"ensure to blow bubbles with your whole face in the water for 5 seconds.",nice:"float. You showed good effort with your breathing and face position in the water."},
+{short:"Front float body",full:"make sure to stay relaxed and look down at the floor with your whole face in the water.",nice:"float. You showed good body position and control in the water."},
+{short:"Back float arms",full:"ensure your arms are straight and at the surface of the water.",nice:"float. You showed good control with your arm position and movement."},
+{short:"Back float legs",full:"ensure your legs are straight and at the surface of the water.",nice:"float. You showed strong effort with your leg action and kicking."},
+{short:"Back float body",full:"make sure to stay relaxed with your ears in the water.",nice:"float. You showed good body position and control in the water."},
+{short:"Roll front-back arms",full:"ensure your arms stay straight and at the surface of the water.",nice:"roll. You showed good control with your arm position and movement."},
+{short:"Roll front-back legs",full:"ensure your legs stay straight and at the surface of the water.",nice:"roll. You showed strong effort with your leg action and kicking."},
+{short:"Roll front-back body",full:"make sure to put your ears in the water right away and ensure your body is at the surface.",nice:"roll. You showed good body position and control in the water."},
+{short:"Roll back-front arms",full:"ensure your arms stay straight and at the surface of the water.",nice:"roll. You showed good control with your arm position and movement."},
+{short:"Roll back-front legs",full:"ensure your legs stay straight and at the surface of the water.",nice:"roll. You showed strong effort with your leg action and kicking."},
+{short:"Roll back-front breathing",full:"make sure to look down at the floor and blow your bubbles right away.",nice:"roll. You showed good effort with your breathing and face position in the water."},
+{short:"Roll back-front body",full:"make sure to put your whole face in the water and blow bubbles.",nice:"roll. You showed good body position and control in the water."},
+{short:"Front glide arms",full:"make sure your arms are extended beyond your head.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Front glide legs",full:"make sure your legs are together and straight at the surface of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Front glide bubbles",full:"ensure that you blow bubbles with your whole face in the water.",nice:"glide. You showed good effort with your breathing and face position in the water."},
+{short:"Front glide body",full:"make sure to stay relaxed and look down at the floor with your whole face in the water.",nice:"glide. You showed good body position and control in the water."},
+{short:"Back glide arms",full:"make sure to keep your arms by your side.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Back glide legs",full:"ensure your legs are together and straight at the surface of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Back glide body",full:"make sure to stay relaxed with your ears in the water and body at the surface of the water.",nice:"glide. You showed good body position and control in the water."},
+{short:"Side glide arms",full:"ensure your arms are straight, one at your head and one at your side.",nice:"glide. You showed good control with your arm position and movement."},
+{short:"Side glide legs",full:"ensure your legs are straight and near the surface of the water.",nice:"glide. You showed strong effort with your leg action and kicking."},
+{short:"Side glide body",full:"make sure your body is on its side and your head is resting on your arm, ear touching arm.",nice:"glide. You showed good body position and control in the water."},
+{short:"Front flutter arms",full:"ensure your arms are extended beyond your head.",nice:"flutter kick. You showed good control with your arm position and movement."},
+{short:"Front flutter legs",full:"make sure both legs are continuously alternating while kicking.",nice:"flutter kick. You showed strong effort with your leg action and kicking."},
+{short:"Front flutter bubbles",full:"ensure you are blowing bubbles with your whole face in the water.",nice:"flutter kick. You showed good effort with your breathing and face position in the water."},
+{short:"Front flutter body",full:"ensure your whole body is near the surface of the water.",nice:"flutter kick. You showed good body position and control in the water."},
+{short:"Back flutter arms",full:"make sure to keep your arms by your side.",nice:"flutter kick. You showed good control with your arm position and movement."},
+{short:"Back flutter legs",full:"make sure both legs are continuously alternating while kicking.",nice:"flutter kick. You showed strong effort with your leg action and kicking."},
+{short:"Back flutter body",full:"ensure your whole body is near the surface of the water.",nice:"flutter kick. You showed good body position and control in the water."},
+{short:"PFD front crawl arms",full:"ensure both arms are always alternating.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"PFD front crawl legs",full:"make sure both legs are continuously alternating while kicking.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"PFD front crawl body",full:"remember to stay relaxed on your front and keep arms and legs moving continuously.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"PFD tread arms",full:"ensure your arms are continuously sculling, always moving back and forth.",nice:"treading. You showed good control with your arm position and movement."},
+{short:"PFD tread legs",full:"make sure your legs are always kicking.",nice:"treading. You showed strong effort with your leg action and kicking."},
+{short:"PFD tread body",full:"ensure your body is vertical and nose and mouth are out of the water the whole time.",nice:"treading. You showed good body position and control in the water."}]},
 
 "swimmer2":{name:"Swimmer 2",workOn:[
-{short:"Back flutter arms",full:"make sure to keep your arms by your side."}
-,{short:"Back flutter legs",full:"ensure both legs are continuously alternating with a slight knee bend."},
-{short:"Back flutter body",full:"remember to relax and ensure your whole body stays at the surface of the water."},
-{short:"Side flutter arms",full:"ensure your arms are straight, one extended beyond your head and one at your side."},
-{short:"Side flutter legs",full:"ensure both legs are continuously alternating with a slight knee bend."},
-{short:"Side flutter body",full:"make sure your body is on its side and your head is resting on your arm, ear touching arm."},
-{short:"Vertical whip kick",full:"make sure both legs kick at the same time with knees close together and feet wide apart."},
-{short:"Front crawl arms",full:"ensure both arms are always alternating."},
-{short:"Front crawl legs",full:"ensure both legs are continuously alternating with a slight knee bend."},
-{short:"Front crawl breathing",full:"be sure to blow bubbles in the water and inhale when your face is out of the water."},
-{short:"Front crawl body",full:"make sure your body is on its front the whole time."},
-{short:"Back crawl arms",full:"ensure both arms are always alternating."},
-{short:"Back crawl legs",full:"ensure both legs are continuously alternating with a slight knee bend."},
-{short:"Back crawl breathing",full:"ensure your breathing is relaxed."},
-{short:"Back crawl body",full:"make sure your body is on its back the whole time."},
-{short:"Tread arms",full:"ensure your arms are continuously sculling, always moving back and forth."},
-{short:"Tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick."},
-{short:"Tread body",full:"ensure your body is vertical and nose and mouth are out of the water the whole time."}]},
+{short:"Back flutter arms",full:"make sure to keep your arms by your side.",nice:"flutter kick. You showed good control with your arm position and movement."}
+,{short:"Back flutter legs",full:"ensure both legs are continuously alternating with a slight knee bend.",nice:"flutter kick. You showed strong effort with your leg action and kicking."},
+{short:"Back flutter body",full:"remember to relax and ensure your whole body stays at the surface of the water.",nice:"flutter kick. You showed good body position and control in the water."},
+{short:"Side flutter arms",full:"ensure your arms are straight, one extended beyond your head and one at your side.",nice:"flutter kick. You showed good control with your arm position and movement."},
+{short:"Side flutter legs",full:"ensure both legs are continuously alternating with a slight knee bend.",nice:"flutter kick. You showed strong effort with your leg action and kicking."},
+{short:"Side flutter body",full:"make sure your body is on its side and your head is resting on your arm, ear touching arm.",nice:"flutter kick. You showed good body position and control in the water."},
+{short:"Vertical whip kick",full:"make sure both legs kick at the same time with knees close together and feet wide apart.",nice:"whip kick. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl arms",full:"ensure both arms are always alternating.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"Front crawl legs",full:"ensure both legs are continuously alternating with a slight knee bend.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl breathing",full:"be sure to blow bubbles in the water and inhale when your face is out of the water.",nice:"front crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl body",full:"make sure your body is on its front the whole time.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"Back crawl arms",full:"ensure both arms are always alternating.",nice:"back crawl. You showed good control with your arm position and movement."},
+{short:"Back crawl legs",full:"ensure both legs are continuously alternating with a slight knee bend.",nice:"back crawl. You showed strong effort with your leg action and kicking."},
+{short:"Back crawl breathing",full:"ensure your breathing is relaxed.",nice:"back crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Back crawl body",full:"make sure your body is on its back the whole time.",nice:"back crawl. You showed good body position and control in the water."},
+{short:"Tread arms",full:"ensure your arms are continuously sculling, always moving back and forth.",nice:"treading. You showed good control with your arm position and movement."},
+{short:"Tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick.",nice:"treading. You showed strong effort with your leg action and kicking."},
+{short:"Tread body",full:"ensure your body is vertical and nose and mouth are out of the water the whole time.",nice:"treading. You showed good body position and control in the water."}]},
 
 "swimmer3":{name:"Swimmer 3",workOn:[
-{short:"Front-back roll arms",full:"ensure your arms are extended above your head when kicking on your front."},
-{short:"Front-back roll kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Front-back roll body",full:"ensure your ears enter the water right away when rolling to your back and your body is at the surface of the water."},
-{short:"Back-front roll arms",full:"ensure your arms are at your side when kicking on your back."},
-{short:"Back-front roll kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Back-front roll body",full:"ensure your face enters the water right away and extend your arms beyond your head when kicking on your front."},
-{short:"Whip kick back legs",full:"ensure both legs kick at the same time with knees close and feet wide apart."},
-{short:"Whip kick back body",full:"make sure your body is on its back."},
-{short:"Front crawl arms",full:"ensure your arms are always alternating and pulling under the water."},
-{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water."},
-{short:"Front crawl body",full:"ensure your body is relaxed and horizontal at the surface of the water."},
-{short:"Back crawl arms",full:"ensure your arms are always alternating and pulling under the water."},
-{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Back crawl body",full:"ensure your body is relaxed and horizontal at the surface of the water."},
-{short:"Tread arms",full:"ensure your arms are continuously sculling, always moving back and forth."},
-{short:"Tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick."},
-{short:"Tread body",full:"ensure your body is vertical and nose and mouth must be out of the water the whole time."}]},
+{short:"Front-back roll arms",full:"ensure your arms are extended above your head when kicking on your front.",nice:"roll. You showed good control with your arm position and movement."},
+{short:"Front-back roll kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"roll. You showed strong effort with your leg action and kicking."},
+{short:"Front-back roll body",full:"ensure your ears enter the water right away when rolling to your back and your body is at the surface of the water.",nice:"roll. You showed good body position and control in the water."},
+{short:"Back-front roll arms",full:"ensure your arms are at your side when kicking on your back.",nice:"roll. You showed good control with your arm position and movement."},
+{short:"Back-front roll kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"roll. You showed strong effort with your leg action and kicking."},
+{short:"Back-front roll body",full:"ensure your face enters the water right away and extend your arms beyond your head when kicking on your front.",nice:"roll. You showed good body position and control in the water."},
+{short:"Whip kick back legs",full:"ensure both legs kick at the same time with knees close and feet wide apart.",nice:"whip kick. You showed strong effort with your leg action and kicking."},
+{short:"Whip kick back body",full:"make sure your body is on its back.",nice:"whip kick. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl arms",full:"ensure your arms are always alternating and pulling under the water.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water.",nice:"front crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl body",full:"ensure your body is relaxed and horizontal at the surface of the water.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"Back crawl arms",full:"ensure your arms are always alternating and pulling under the water.",nice:"back crawl. You showed good control with your arm position and movement."},
+{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"back crawl. You showed strong effort with your leg action and kicking."},
+{short:"Back crawl body",full:"ensure your body is relaxed and horizontal at the surface of the water.",nice:"back crawl. You showed good body position and control in the water."},
+{short:"Tread arms",full:"ensure your arms are continuously sculling, always moving back and forth.",nice:"treading. You showed good control with your arm position and movement."},
+{short:"Tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick.",nice:"treading. You showed strong effort with your leg action and kicking."},
+{short:"Tread body",full:"ensure your body is vertical and nose and mouth must be out of the water the whole time.",nice:"treading. You showed good body position and control in the water."}]},
 
 "swimmer4":{name:"Swimmer 4",workOn:[
-{short:"Front crawl arms",full:"make sure your arms are always alternating and reaching out of the water, and then pull through the water."},
-{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water."},
-{short:"Front crawl body",full:"ensure your body is always on its front and horizontal at the surface of the water."},
-{short:"Back crawl arms",full:"make sure your arms are always alternating and reaching out of the water, and then pull through the water."},
-{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Back crawl breathing",full:"ensure your breathing is relaxed."},{short:"Back crawl body",full:"Ensure your body is relaxed on its back."},
-{short:"Front whip kick",full:"ensure both legs kick at the same time with knees close and feet wide apart."},
-{short:"Front whip body",full:"make sure your body is on its front."},
-{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head."},
-{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water."},
-{short:"Breaststroke body",full:"ensure your body is horizontal on your front."},
-{short:"Tread arms",full:"ensure your arms are continuously sculling, always moving back and forth."},
-{short:"Tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick."},
-{short:"Tread body",full:"ensure your body is vertical and nose and mouth must be out of the water the whole time."}]},
+{short:"Front crawl arms",full:"make sure your arms are always alternating and reaching out of the water, and then pull through the water.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water.",nice:"front crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl body",full:"ensure your body is always on its front and horizontal at the surface of the water.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"Back crawl arms",full:"make sure your arms are always alternating and reaching out of the water, and then pull through the water.",nice:"back crawl. You showed good control with your arm position and movement."},
+{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"back crawl. You showed strong effort with your leg action and kicking."},
+{short:"Back crawl breathing",full:"ensure your breathing is relaxed.",nice:"back crawl. You showed good effort with your breathing and face position in the water."},{short:"Back crawl body",full:"Ensure your body is relaxed on its back.",nice:"back crawl. You showed good body position and control in the water."},
+{short:"Front whip kick",full:"ensure both legs kick at the same time with knees close and feet wide apart.",nice:"whip kick. You showed strong effort with your leg action and kicking."},
+{short:"Front whip body",full:"make sure your body is on its front.",nice:"whip kick. You showed good body position and control in the water."},
+{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head.",nice:"breaststroke. You showed good control with your arm position and movement."},
+{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water.",nice:"breaststroke. You showed good effort with your breathing and face position in the water."},
+{short:"Breaststroke body",full:"ensure your body is horizontal on your front.",nice:"breaststroke. You showed good body position and control in the water."},
+{short:"Tread arms",full:"ensure your arms are continuously sculling, always moving back and forth.",nice:"treading. You showed good control with your arm position and movement."},
+{short:"Tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick.",nice:"treading. You showed strong effort with your leg action and kicking."},
+{short:"Tread body",full:"ensure your body is vertical and nose and mouth must be out of the water the whole time.",nice:"treading. You showed good body position and control in the water."}]},
 
 "swimmer5":{name:"Swimmer 5",workOn:[
-{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head."},
-{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart."},
-{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water."},
-{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight."},
-{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip."},
-{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water."},
-{short:"Front crawl body",full:"ensure your body is horizontal on its front."},
-{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs."},
-{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Back crawl breathing",full:"ensure your breathing is relaxed."},
-{short:"Back crawl body",full:"ensure your body is relaxed on its back."},
-{short:"Head-up crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip."},
-{short:"Head-up crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Head-up crawl body",full:"ensure your body is horizontal on your front. Eyes must be above the surface of the water the whole time."},
-{short:"Jump tread arms",full:"ensure your arms are continuously sculling, always moving back and forth."},
-{short:"Jump tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick."},
-{short:"Jump tread body",full:"ensure your body is vertical and nose and mouth must be out of the water the whole time."},
-{short:"Eggbeater legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees."},
-{short:"Eggbeater body",full:"ensure your body is vertical."}]},
+{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head.",nice:"breaststroke. You showed good control with your arm position and movement."},
+{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart.",nice:"breaststroke. You showed strong effort with your leg action and kicking."},
+{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water.",nice:"breaststroke. You showed good effort with your breathing and face position in the water."},
+{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight.",nice:"breaststroke. You showed good body position and control in the water."},
+{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water.",nice:"front crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl body",full:"ensure your body is horizontal on its front.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs.",nice:"back crawl. You showed good control with your arm position and movement."},
+{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"back crawl. You showed strong effort with your leg action and kicking."},
+{short:"Back crawl breathing",full:"ensure your breathing is relaxed.",nice:"back crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Back crawl body",full:"ensure your body is relaxed on its back.",nice:"back crawl. You showed good body position and control in the water."},
+{short:"Head-up crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip.",nice:"head-up swim. You showed good control with your arm position and movement."},
+{short:"Head-up crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"head-up swim. You showed strong effort with your leg action and kicking."},
+{short:"Head-up crawl body",full:"ensure your body is horizontal on your front. Eyes must be above the surface of the water the whole time.",nice:"head-up swim. You showed good body position and control in the water."},
+{short:"Jump tread arms",full:"ensure your arms are continuously sculling, always moving back and forth.",nice:"treading. You showed good control with your arm position and movement."},
+{short:"Jump tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick.",nice:"treading. You showed strong effort with your leg action and kicking."},
+{short:"Jump tread body",full:"ensure your body is vertical and nose and mouth must be out of the water the whole time.",nice:"treading. You showed good body position and control in the water."},
+{short:"Eggbeater legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees.",nice:"eggbeater. You showed strong effort with your leg action and kicking."},
+{short:"Eggbeater body",full:"ensure your body is vertical.",nice:"eggbeater. You showed good body position and control in the water."}]},
 
 "swimmer6":{name:"Swimmer 6",workOn:[
-{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head."},
-{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart."},
-{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water."},
-{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight."},
-{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip."},
-{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water."},
-{short:"Front crawl body",full:"ensure your body is horizontal on its front."},
-{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs."},
-{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Back crawl breathing",full:"ensure your breathing is relaxed."},
-{short:"Back crawl body",full:"ensure your body is relaxed on its back."},
-{short:"Jump tread arms",full:"ensure your arms are continuously sculling, always moving back and forth."},
-{short:"Jump tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick."},
-{short:"Jump tread body",full:"ensure your body is vertical and nose and mouth must be out of the water the whole time."},
-{short:"Eggbeater back legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees."},
-{short:"Eggbeater back body",full:"ensure your body is on its back."},
-{short:"Scissor kick legs",full:"ensure both legs kick and recover at the same time. One leg extends forward and the other extends back then squeeze legs together."},
-{short:"Scissor kick body",full:"ensure your body is on its side."},
-{short:"Leg-only support legs",full:"ensure you are using a lifesaving kick such as eggbeater, whip kick, or scissors kick."},
-{short:"Leg-only support body",full:"ensure your body is vertical with mouth and nose above the surface of the water."}]},
+{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head.",nice:"breaststroke. You showed good control with your arm position and movement."},
+{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart.",nice:"breaststroke. You showed strong effort with your leg action and kicking."},
+{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water.",nice:"breaststroke. You showed good effort with your breathing and face position in the water."},
+{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight.",nice:"breaststroke. You showed good body position and control in the water."},
+{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water.",nice:"front crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl body",full:"ensure your body is horizontal on its front.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs.",nice:"back crawl. You showed good control with your arm position and movement."},
+{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"back crawl. You showed strong effort with your leg action and kicking."},
+{short:"Back crawl breathing",full:"ensure your breathing is relaxed.",nice:"back crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Back crawl body",full:"ensure your body is relaxed on its back.",nice:"back crawl. You showed good body position and control in the water."},
+{short:"Jump tread arms",full:"ensure your arms are continuously sculling, always moving back and forth.",nice:"treading. You showed good control with your arm position and movement."},
+{short:"Jump tread legs",full:"make sure your knees come up to your chest and legs extend down into the water for a supportive kick.",nice:"treading. You showed strong effort with your leg action and kicking."},
+{short:"Jump tread body",full:"ensure your body is vertical and nose and mouth must be out of the water the whole time.",nice:"treading. You showed good body position and control in the water."},
+{short:"Eggbeater back legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees.",nice:"eggbeater. You showed strong effort with your leg action and kicking."},
+{short:"Eggbeater back body",full:"ensure your body is on its back.",nice:"eggbeater. You showed good body position and control in the water."},
+{short:"Scissor kick legs",full:"ensure both legs kick and recover at the same time. One leg extends forward and the other extends back then squeeze legs together.",nice:"scissor kick. You showed strong effort with your leg action and kicking."},
+{short:"Scissor kick body",full:"ensure your body is on its side.",nice:"scissor kick. You showed strong effort with your leg action and kicking."},
+{short:"Leg-only support legs",full:"ensure you are using a lifesaving kick such as eggbeater, whip kick, or scissors kick.",nice:"surface support. You showed strong effort with your leg action and kicking."},
+{short:"Leg-only support body",full:"ensure your body is vertical with mouth and nose above the surface of the water.",nice:"surface support. You showed good body position and control in the water."}]},
 
 "swimmer7":{name:"Swimmer 7: Rookie Patrol",workOn:[
-{short:"Head-up swim",full:"ensure your eyes are always above the surface of the water and both of your arms and legs are always moving."},
-{short:"sculling",full:"make sure your toes stay near the surface of the water. Also, ensure you stay in the same spot as you scull, no travelling."},
-{short:"Object carry",full:"wnsure your head is above the water and you are using a lifesaving kick."},
-{short:"Surface dives",full:"make sure you descend vertically and come up to the surface with an arm extended above your head."},
-{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip."},
-{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water."},
-{short:"Front crawl body",full:"ensure your body is horizontal on its front."},
-{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs."},
-{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Back crawl breathing",full:"ensure your breathing is relaxed."},
-{short:"Back crawl body",full:"ensure your body is relaxed on its back."},
-{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head."},
-{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart."},
-{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water."},
-{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight."},
-{short:"Eggbeater back legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees."},
-{short:"Eggbeater back body",full:"ensure your body is on its back."},
-{short:"Scissor kick legs",full:"ensure both legs kick and recover at the same time. One leg extends forward and the other extends back then squeeze legs together."},
-{short:"Scissor kick body",full:"ensure your body is on its side."},
-{short:"Endurance",full:"keep practising your strokes to improve your endurance and time."},
-{short:"Assess victim",full:"remember to check the environment for hazards, responsiveness, and bleeding. Also, be sure to communicate with your victim to gather relevant information."},
-{short:"Contact EMS",full:"remember to include all known information including who, why, what, and where."},
-{short:"care for bleeding",full:"remember to check the environment for hazards, responsiveness, and bleeding. Ensure you check ABCs, rest and reassure your victim, and apply direct pressure to the injury."},
-{short:"Weak swimmer",full:"remember that weak swimmers might have some swimming abilities and are usually at the surface of the water but have difficulty reaching safety. They may require assistance from a rescuer."},
-{short:"Non-swimmer",full:"remember that non-swimmers have no swimming abilities and are usually near or under the surface of the water. They require assistance of a rescuer to make it back to safety. Non-swimmers pose danger to the rescuer."}]},
+{short:"Head-up swim",full:"ensure your eyes are always above the surface of the water and both of your arms and legs are always moving.",nice:"head-up swim. You kept good awareness while swimming with your head up."},
+{short:"sculling",full:"make sure your toes stay near the surface of the water. Also, ensure you stay in the same spot as you scull, no travelling.",nice:"sculling. You showed good control using your hands to stay supported."},
+{short:"Object carry",full:"wnsure your head is above the water and you are using a lifesaving kick.",nice:"object carry. You showed good control while supporting or carrying the object."},
+{short:"Surface dives",full:"make sure you descend vertically and come up to the surface with an arm extended above your head.",nice:"surface dive. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water.",nice:"front crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl body",full:"ensure your body is horizontal on its front.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs.",nice:"back crawl. You showed good control with your arm position and movement."},
+{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"back crawl. You showed strong effort with your leg action and kicking."},
+{short:"Back crawl breathing",full:"ensure your breathing is relaxed.",nice:"back crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Back crawl body",full:"ensure your body is relaxed on its back.",nice:"back crawl. You showed good body position and control in the water."},
+{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head.",nice:"breaststroke. You showed good control with your arm position and movement."},
+{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart.",nice:"breaststroke. You showed strong effort with your leg action and kicking."},
+{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water.",nice:"breaststroke. You showed good effort with your breathing and face position in the water."},
+{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight.",nice:"breaststroke. You showed good body position and control in the water."},
+{short:"Eggbeater back legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees.",nice:"eggbeater. You showed strong effort with your leg action and kicking."},
+{short:"Eggbeater back body",full:"ensure your body is on its back.",nice:"eggbeater. You showed good body position and control in the water."},
+{short:"Scissor kick legs",full:"ensure both legs kick and recover at the same time. One leg extends forward and the other extends back then squeeze legs together.",nice:"scissor kick. You showed strong effort with your leg action and kicking."},
+{short:"Scissor kick body",full:"ensure your body is on its side.",nice:"scissor kick. You showed strong effort with your leg action and kicking."},
+{short:"Endurance",full:"keep practising your strokes to improve your endurance and time.",nice:"endurance. You showed strong effort and kept working hard throughout the swim."},
+{short:"Assess victim",full:"remember to check the environment for hazards, responsiveness, and bleeding. Also, be sure to communicate with your victim to gather relevant information.",nice:"victim rescue. You showed good understanding of safe rescue skills and communication."},
+{short:"Contact EMS",full:"remember to include all known information including who, why, what, and where.",nice:"first aid. You showed good understanding of the first aid steps and victim care."},
+{short:"care for bleeding",full:"remember to check the environment for hazards, responsiveness, and bleeding. Ensure you check ABCs, rest and reassure your victim, and apply direct pressure to the injury.",nice:"first aid. You showed good understanding of the first aid steps and victim care."},
+{short:"Weak swimmer",full:"remember that weak swimmers might have some swimming abilities and are usually at the surface of the water but have difficulty reaching safety. They may require assistance from a rescuer.",nice:"weak swimmer. You showed strong effort and continued to improve this skill."},
+{short:"Non-swimmer",full:"remember that non-swimmers have no swimming abilities and are usually near or under the surface of the water. They require assistance of a rescuer to make it back to safety. Non-swimmers pose danger to the rescuer.",nice:"non-swimmer. You showed strong effort and continued to improve this skill."}]},
 
 "swimmer8":{name:"Swimmer 8: Ranger Patrol",workOn:[
-{short:"Somersaults",full:"practice head over heels rotation."},
-{short:"Head-up swim",full:"ensure your eyes are always above the surface of the water and both arms and legs are always moving."},
-{short:"Object support",full:"ensure your head is above the surface the entire time and you are always kicking."},
-{short:"Remove conscious victim",full:"ensure your removal is safe by preventing injury to yourself and your victim."},
-{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip."},
-{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water."},
-{short:"Front crawl body",full:"ensure your body is horizontal on its front."},
-{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs."},
-{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Back crawl breathing",full:"ensure your breathing is relaxed."},
-{short:"Back crawl body",full:"ensure your body is relaxed on its back."},
-{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head."},
-{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart."},
-{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water."},
-{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight."},
-{short:"Eggbeater back legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees."},
-{short:"Eggbeater back body",full:"ensure your body is on its back."},
-{short:"Scissor kick legs",full:"ensure both legs kick and recover at the same time. One leg extends forward and the other extends back then squeeze legs together."},
-{short:"Scissor kick body",full:"ensure your body is on its side."},
-{short:"Endurance",full:"keep practising your strokes to improve your endurance and time."},
-{short:"Unconscious breathing",full:"remember to check the environment for hazards, check responsiveness, and call EMS and get an AED right away. Check the airway by opening it using a head-tilt/chin-lift. Look, listen and feel for breathing for 5 seconds only. Place your victim in recovery position."},
-{short:"Treat for shock",full:"remember to check the environment for hazards, check responsiveness, and assess ABCs right away. Call EMS and get an AED right away. Make sure you rest and reassure your victim, provide warmth, and place your victim in recovery position."},
-{short:"Mild obstruction",full:"remember to encourage coughing and reassure your victim."},
-{short:"Severe obstruction",full:"remember to call for help before starting your treatment. Remember to alternate 5 back blows and 5 abdominal thrusts until the victim’s airway is cleared or they fall unconscious."},
-{short:"Victim avoidance",full:"remember victim avoidance skills such as ready position, swim away, or submerge when in danger."},
-{short:"Buoyant aid rescue",full:"remember to call for help before entering the water. Remember to keep your eyes on the victim by entering the water with a stride jump and approaching the victim with a head up approach. Remember to always communicate with your victim throughout the rescue."}]},
+{short:"Somersaults",full:"practice head over heels rotation.",nice:"somersaults. You showed good effort with your rotation and body control."},
+{short:"Head-up swim",full:"ensure your eyes are always above the surface of the water and both arms and legs are always moving.",nice:"head-up swim. You kept good awareness while swimming with your head up."},
+{short:"Object support",full:"ensure your head is above the surface the entire time and you are always kicking.",nice:"surface support. You showed good control while supporting or carrying the object."},
+{short:"Remove conscious victim",full:"ensure your removal is safe by preventing injury to yourself and your victim.",nice:"victim rescue. You showed good understanding of safe rescue skills and communication."},
+{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water.",nice:"front crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl body",full:"ensure your body is horizontal on its front.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs.",nice:"back crawl. You showed good control with your arm position and movement."},
+{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"back crawl. You showed strong effort with your leg action and kicking."},
+{short:"Back crawl breathing",full:"ensure your breathing is relaxed.",nice:"back crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Back crawl body",full:"ensure your body is relaxed on its back.",nice:"back crawl. You showed good body position and control in the water."},
+{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head.",nice:"breaststroke. You showed good control with your arm position and movement."},
+{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart.",nice:"breaststroke. You showed strong effort with your leg action and kicking."},
+{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water.",nice:"breaststroke. You showed good effort with your breathing and face position in the water."},
+{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight.",nice:"breaststroke. You showed good body position and control in the water."},
+{short:"Eggbeater back legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees.",nice:"eggbeater. You showed strong effort with your leg action and kicking."},
+{short:"Eggbeater back body",full:"ensure your body is on its back.",nice:"eggbeater. You showed good body position and control in the water."},
+{short:"Scissor kick legs",full:"ensure both legs kick and recover at the same time. One leg extends forward and the other extends back then squeeze legs together.",nice:"scissor kick. You showed strong effort with your leg action and kicking."},
+{short:"Scissor kick body",full:"ensure your body is on its side.",nice:"scissor kick. You showed strong effort with your leg action and kicking."},
+{short:"Endurance",full:"keep practising your strokes to improve your endurance and time.",nice:"endurance. You showed strong effort and kept working hard throughout the swim."},
+{short:"Unconscious breathing",full:"remember to check the environment for hazards, check responsiveness, and call EMS and get an AED right away. Check the airway by opening it using a head-tilt/chin-lift. Look, listen and feel for breathing for 5 seconds only. Place your victim in recovery position.",nice:"unconscious breathing. You showed good effort with your breathing and face position in the water."},
+{short:"Treat for shock",full:"remember to check the environment for hazards, check responsiveness, and assess ABCs right away. Call EMS and get an AED right away. Make sure you rest and reassure your victim, provide warmth, and place your victim in recovery position.",nice:"first aid. You showed good understanding of the first aid steps and victim care."},
+{short:"Mild obstruction",full:"remember to encourage coughing and reassure your victim.",nice:"first aid. You showed good understanding of the first aid steps and victim care."},
+{short:"Severe obstruction",full:"remember to call for help before starting your treatment. Remember to alternate 5 back blows and 5 abdominal thrusts until the victim’s airway is cleared or they fall unconscious.",nice:"first aid. You showed good understanding of the first aid steps and victim care."},
+{short:"Victim avoidance",full:"remember victim avoidance skills such as ready position, swim away, or submerge when in danger.",nice:"victim rescue. You showed good understanding of safe rescue skills and communication."},
+{short:"Buoyant aid rescue",full:"remember to call for help before entering the water. Remember to keep your eyes on the victim by entering the water with a stride jump and approaching the victim with a head up approach. Remember to always communicate with your victim throughout the rescue.",nice:"rescue. You showed good understanding of safe rescue skills and communication."}]},
 
 "swimmer9":{name:"Swimmer 9: Star Patrol",workOn:[
-{short:"Head-up swim",full:"ensure your eyes are always above the surface of the water and both arms and legs are always moving. Make sure your toes stay near the surface of the water while sculling."},
-{short:"Defence methods",full:"always ensure your safety as a rescuer by using reverse and ready, swimming away or submerging from victims who are trying to grasp you."},{short:"Eggbeater kick",full:"Use the Swimmer 5 eggbeater comments."},
-{short:"Object carry",full:"ensure your head is above the water and you are using a lifesaving kick."},
-{short:"Remove unconscious victim",full:"ensure your removal is safe by preventing injury to yourself and your victim. Remember to give your bystander clear direction."},
-{short:"Turn/support victim",full:"ensure your victim's face is supported above the water the entire time to prevent water from entering the airway."},
-{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip."},
-{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water."},
-{short:"Front crawl body",full:"ensure your body is horizontal on its front."},
-{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs."},
-{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick."},
-{short:"Back crawl breathing",full:"ensure your breathing is relaxed."},
-{short:"Back crawl body",full:"ensure your body is relaxed on its back."},
-{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head."},
-{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart."},
-{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water."},
-{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight."},
-{short:"Eggbeater back legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees."},
-{short:"Eggbeater back body",full:"ensure your body is on its back."},
-{short:"Scissor kick legs",full:"ensure both legs kick and recover at the same time. One leg extends forward and the other extends back then squeeze legs together."},
-{short:"Scissor kick body",full:"ensure your body is on its side."},
-{short:"Endurance",full:"keep practising your strokes to improve your endurance and time."},
-{short:"Bone or joint injury",full:"remember to assess the environment for hazards, check responsiveness, and call EMS if necessary right away. Remember to minimize movement of the injury."},
-{short:"Respiratory emergency",full:"remember to assess the environment for hazards, check responsiveness, and call EMS if necessary right away. Remember to place your victim in a comfortable position and assist your victim to find and use their medication."},
-{short:"Towing aid rescue",full:"remember to call for help before entering the water. Remember to keep your eyes on the victim by entering the water with a stride jump and approaching the victim with a head up approach. Remember to always communicate with your victim throughout the rescue by providing reassurance and appropriate care."}]}
+{short:"Head-up swim",full:"ensure your eyes are always above the surface of the water and both arms and legs are always moving. Make sure your toes stay near the surface of the water while sculling.",nice:"head-up swim. You kept good awareness while swimming with your head up."},
+{short:"Defence methods",full:"always ensure your safety as a rescuer by using reverse and ready, swimming away or submerging from victims who are trying to grasp you.",nice:"defence methods. You showed good awareness of how to stay safe in the water."},{short:"Eggbeater kick",full:"Use the Swimmer 5 eggbeater comments.",nice:"eggbeater. You showed strong effort with your leg action and kicking."},
+{short:"Object carry",full:"ensure your head is above the water and you are using a lifesaving kick.",nice:"object carry. You showed good control while supporting or carrying the object."},
+{short:"Remove unconscious victim",full:"ensure your removal is safe by preventing injury to yourself and your victim. Remember to give your bystander clear direction.",nice:"victim rescue. You showed good understanding of safe rescue skills and communication."},
+{short:"Turn/support victim",full:"ensure your victim's face is supported above the water the entire time to prevent water from entering the airway.",nice:"victim rescue. You showed good understanding of safe rescue skills and communication."},
+{short:"Front crawl arms",full:"ensure your arms are always alternating with elbows higher than hands. Reach forward and then pull down past your hip.",nice:"front crawl. You showed good control with your arm position and movement."},
+{short:"Front crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"front crawl. You showed strong effort with your leg action and kicking."},
+{short:"Front crawl breathing",full:"make sure you always breathe to the side and exhale in the water.",nice:"front crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Front crawl body",full:"ensure your body is horizontal on its front.",nice:"front crawl. You showed good body position and control in the water."},
+{short:"Back crawl arms",full:"ensure your arms are straight as they alternate. Remember, arms enter the water beyond your shoulders and then pull down through the water with bent arms to your thighs.",nice:"back crawl. You showed good control with your arm position and movement."},
+{short:"Back crawl kick",full:"ensure your kick is continuous and initiated from your hips. Remember to keep your legs and feet relaxed as you kick.",nice:"back crawl. You showed strong effort with your leg action and kicking."},
+{short:"Back crawl breathing",full:"ensure your breathing is relaxed.",nice:"back crawl. You showed good effort with your breathing and face position in the water."},
+{short:"Back crawl body",full:"ensure your body is relaxed on its back.",nice:"back crawl. You showed good body position and control in the water."},
+{short:"Breaststroke arms",full:"ensure both arms pull towards your chest at the same time with elbow higher than hands and then extend beyond your head.",nice:"breaststroke. You showed good control with your arm position and movement."},
+{short:"Breaststroke legs",full:"ensure both legs kick at the same time with knees close and feet wide apart.",nice:"breaststroke. You showed strong effort with your leg action and kicking."},
+{short:"Breaststroke breathing",full:"ensure you are always exhaling when your face is in the water.",nice:"breaststroke. You showed good effort with your breathing and face position in the water."},
+{short:"Breaststroke body",full:"ensure your body is always on its front and horizontal. Remember to pull your arms towards your chest, breathe, kick then glide with arms extended beyond your head and legs straight.",nice:"breaststroke. You showed good body position and control in the water."},
+{short:"Eggbeater back legs",full:"ensure both legs are alternating in circles towards the middle. Feet must be wider than knees.",nice:"eggbeater. You showed strong effort with your leg action and kicking."},
+{short:"Eggbeater back body",full:"ensure your body is on its back.",nice:"eggbeater. You showed good body position and control in the water."},
+{short:"Scissor kick legs",full:"ensure both legs kick and recover at the same time. One leg extends forward and the other extends back then squeeze legs together.",nice:"scissor kick. You showed strong effort with your leg action and kicking."},
+{short:"Scissor kick body",full:"ensure your body is on its side.",nice:"scissor kick. You showed strong effort with your leg action and kicking."},
+{short:"Endurance",full:"keep practising your strokes to improve your endurance and time.",nice:"endurance. You showed strong effort and kept working hard throughout the swim."},
+{short:"Bone or joint injury",full:"remember to assess the environment for hazards, check responsiveness, and call EMS if necessary right away. Remember to minimize movement of the injury.",nice:"first aid. You showed good understanding of the first aid steps and victim care."},
+{short:"Respiratory emergency",full:"remember to assess the environment for hazards, check responsiveness, and call EMS if necessary right away. Remember to place your victim in a comfortable position and assist your victim to find and use their medication.",nice:"first aid. You showed good understanding of the first aid steps and victim care."},
+{short:"Towing aid rescue",full:"remember to call for help before entering the water. Remember to keep your eyes on the victim by entering the water with a stride jump and approaching the victim with a head up approach. Remember to always communicate with your victim throughout the rescue by providing reassurance and appropriate care.",nice:"rescue. You showed good understanding of safe rescue skills and communication."}]}
 };
+
 
 function inferSkill(short){
 
@@ -799,340 +767,133 @@ function inferSkill(short){
 }
 
 function fillSelect(select,items){
-
 select.innerHTML="";
 
 items.forEach(item=>{
-
-const option =
-document.createElement("option");
-
-option.textContent =
-item.short;
-
-option.value =
-item.full;
-
-option.dataset.short =
-item.short;
-
-option.dataset.skill =
-item.skill
-||
-inferSkill(item.short);
-
+const option = document.createElement("option");
+option.textContent = item.short;
+option.value = item.full;
+option.dataset.short = item.short;
+option.dataset.skill = item.skill || inferSkill(item.short);
 select.appendChild(option);
-
 });
 
 }
 
 function makePositiveFromWorkOn(item){
 
-    const skill = item.skill || inferSkill(item.short);
+const skill = item.skill || inferSkill(item.short);
 
-    let compliment = item.full;
-
-    compliment = compliment.replace(/^Make sure /i, "");
-    compliment = compliment.replace(/^Ensure /i, "");
-    compliment = compliment.replace(/^Practice /i, "practising ");
-    compliment = compliment.replace(/^Remember to /i, "");
-
-    compliment = compliment.charAt(0).toLowerCase() + compliment.slice(1);
-
-    return {
-        short:  item.short,
-        skill: skill,
-        full: `${skill}. ${compliment}`
-    };
+return{
+short:item.short,
+skill:skill,
+full:item.nice
+};
 
 }
 
 function updateMenus(){
 
-const level =
-document.getElementById("level").value;
+const level = document.getElementById("level").value;
+const levelData = levels[level];
+const levelPositives = levelData.workOn.map(makePositiveFromWorkOn);
+fillSelect(document.getElementById("positive1"),levelPositives);
+fillSelect(document.getElementById("positive2"),levelPositives);
+document.querySelectorAll(".work").forEach(menu=>{fillSelect(menu,levelData.workOn);});
+}
 
-const levelData =
-levels[level];
-
-const levelPositives =
-levelData.workOn.map(
-makePositiveFromWorkOn
-);
-
-fillSelect(
-document.getElementById("positive1"),
-levelPositives
-);
-
-fillSelect(
-document.getElementById("positive2"),
-levelPositives
-);
-
-document
-.querySelectorAll(".work")
-.forEach(menu=>{
-
-fillSelect(
-menu,
-levelData.workOn
-);
-
-});
-
+function fixCapitalization(text){
+text = text.toLowerCase();
+text = text.replace(/(^\w)|([.!?]\s+\w)/g,match => match.toUpperCase());
+return text;
 }
 
 function generateComment(){
-
-const name =
-document.getElementById("name").value.trim();
-
-const positive1 =
-document.getElementById("positive1");
-
-const positive2 =
-document.getElementById("positive2");
-
-const positiveText1 =
-positive1.value;
-
-const positiveText2 =
-positive2.value;
-
-const positiveSkill2 =
-positive2
-.selectedOptions[0]
-.dataset.skill;
-
-const work =
-[...document.querySelectorAll(".work")];
-
-const opening =
-openings[
-Math.floor(
-Math.random()*openings.length
-)];
-
-const ending =
-endings[
-Math.floor(
-Math.random()*endings.length
-)];
-
-const isFail =
-document.getElementById(
-"passSwitch"
-).checked;
+const name = document.getElementById("name").value.trim();
+const positive1 = document.getElementById("positive1");
+const positive2 = document.getElementById("positive2");
+const positiveText1 = positive1.value;
+const positiveText2 = positive2.value;
+const positiveSkill2 = positive2.selectedOptions[0].dataset.skill;
+const work = [...document.querySelectorAll(".work")];
+const opening = openings[Math.floor(Math.random()*openings.length)];
+const ending = endings[Math.floor(Math.random()*endings.length)];
+const isFail = document.getElementById("passSwitch").checked;
 
 let comment;
-
 if(isFail){
-
-comment =
-`${opening} ${name}! Nice work on your ${positiveText1} For your ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value}. Also for your ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} Finally for your ${work[2].selectedOptions[0].dataset.skill}, ${work[2].value} ${ending}`;
-
+comment = `${opening} ${name}! Nice work on your ${positiveText1} For your ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value}. Also for your ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} Finally for your ${work[2].selectedOptions[0].dataset.skill}, ${work[2].value} ${ending}`;
 }else{
-
-comment =
-`${opening} ${name}! Nice work on your ${positiveText1} For your ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value} Also for your ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} Great improvement in your ${positiveText2} ${ending}`;
+comment = `${opening} ${name}! Nice work on your ${positiveText1} For your ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value} Also for your ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} Great improvement in your ${positiveText2} ${ending}`;
 }
-
-document
-.getElementById("output")
-.value =
-comment;
-
+document.getElementById("output").textContent = fixCapitalization(comment);
 }
 
 function copyComment(){
+const name = document.getElementById("name").value;
+const level = levels[document.getElementById("level").value].name;
+const instructor = document.getElementById("instructor").value;
+const season = document.getElementById("season").value;
+const year = document.getElementById("year").value;
+const date = `${season} ${year}`;
+const next = getNextLevelName();
+const output = document.getElementById("output");
+const comment =(output.value || output.textContent).trim();
 
-const name =
-document.getElementById("name").value;
-
-const level =
-levels[
-document
-.getElementById(
-"level"
-).value
-].name;
-
-const instructor =
-document
-.getElementById(
-"instructor"
-).value;
-
-const season =
-document.getElementById("season").value;
-
-const year =
-document.getElementById("year").value;
-
-const date =
-`${season} ${year}`;
-
-const next =
-getNextLevelName();
-
-const output =
-document
-.getElementById(
-"output"
-);
-
-const comment =
-(output.value || output.textContent).trim();
-
-const finalText =
-
+const finalText = 
 `Name: ${name}
-
 Level: ${level}
-
 Instructor: ${instructor}
-
 Date: ${date}
-
 Please Register In: ${next}
-
-Success & Challenges:
-
-${comment}`;
-
-navigator
-.clipboard
-.writeText(
-finalText
-);
-
+Success & Challenges:${comment}`;
+navigator.clipboard.writeText(finalText);
 }
 
 function setup(){
 
-document
-.getElementById(
-"passSwitch"
-)
-.addEventListener(
-"change",
-function(){
-
-document
-.getElementById(
-"resultLabel"
-)
-.textContent =
-this.checked
+document.getElementById("passSwitch").addEventListener("change",function(){
+document.getElementById("resultLabel").textContent = this.checked
 ?
 "FAIL"
 :
 "PASS";
-
 updatePassFailMenus();
-
 }
 );
 
-const levelSelect =
-document.getElementById(
-"level"
-);
+const levelSelect = document.getElementById("level");
 
-Object
-.keys(levels)
-.forEach(key=>{
-
-const option =
-document.createElement(
-"option"
-);
-
-option.value =
-key;
-
-option.textContent =
-levels[key].name;
-
-levelSelect.appendChild(
-option
-);
-
+Object.keys(levels).forEach(key=>{
+const option = document.createElement("option");
+option.value = key;
+option.textContent = levels[key].name;
+levelSelect.appendChild(option);
 });
-
 fillYears();
-
 updateMenus();
-
 }
 
 function toggleTheme(){
-
 document.body.classList.toggle("light");
-
-document
-.getElementById(
-"themeLabel"
-)
-.textContent =
-
-document.body.classList.contains(
-"light"
-)
-
+document.getElementById("themeLabel").textContent = document.body.classList.contains("light")
 ?
-
 "LIGHT"
-
 :
-
 "DARK";
-
 }
 
 function updatePassFailMenus(){
-
 const isFail =
-document
-.getElementById(
-"passSwitch"
-)
-.checked;
-
-document
-.getElementById(
-"passOnly"
-)
-.classList
-.toggle(
-"hidden",
-isFail
-);
-
-document
-.getElementById(
-"failOnly"
-)
-.classList
-.toggle(
-"hidden",
-!isFail
-);
-
+document.getElementById("passSwitch").checked;
+document.getElementById("passOnly").classList.toggle("hidden",isFail);
+document.getElementById("failOnly").classList.toggle("hidden",!isFail);
 }
 
 function getNextLevelName(){
-
     const keys = Object.keys(levels);
-
-    const currentKey =
-    document.getElementById("level").value;
-
-    const index =
-    keys.indexOf(currentKey);
-
+    const currentKey = document.getElementById("level").value;
+    const index = keys.indexOf(currentKey);
     if(document.getElementById("passSwitch").checked){
         return levels[currentKey].name;
     }
@@ -1145,33 +906,22 @@ function getNextLevelName(){
 }
 
 function fillYears(){
-
-    const yearSelect =
-    document.getElementById("year");
-
+    const yearSelect = document.getElementById("year");
     yearSelect.innerHTML = "";
-
     for(let year = 2026; year <= 2040; year++){
         const option = document.createElement("option");
         option.value = year;
         option.textContent = year;
         yearSelect.appendChild(option);
     }
-
 }
 
 function getCurrentStudentData(){
-
-let output =
-document.getElementById("output");
-
+let output = document.getElementById("output");
 if((output.value || output.textContent).trim() === ""){
     generateComment();
 }
-
-output =
-document.getElementById("output");
-
+output = document.getElementById("output");
 return {
     name:document.getElementById("name").value.trim(),
     instructor:document.getElementById("instructor").value.trim(),
@@ -1183,19 +933,14 @@ return {
     nextLevel:getNextLevelName(),
     comment:(output.value || output.textContent).trim()
 };
-
 }
 
 function saveStudent(){
-
-const student =
-getCurrentStudentData();
-
+const student = getCurrentStudentData();
 if(student.name === ""){
     alert("Enter the student's name before saving.");
     return;
 }
-
 if(editingStudentIndex === null){
     savedStudents.push(student);
 }else{
@@ -1203,30 +948,16 @@ if(editingStudentIndex === null){
     editingStudentIndex = null;
     document.getElementById("saveStudentButton").textContent = "Save Student";
 }
-
-localStorage.setItem(
-"savedSwimStudents",
-JSON.stringify(savedStudents)
-);
-
+localStorage.setItem("savedSwimStudents",JSON.stringify(savedStudents));
 renderSavedStudents();
-
 }
 
 function renderSavedStudents(){
-
-const list =
-document.getElementById("studentList");
-
+const list = document.getElementById("studentList");
 list.innerHTML = "";
-
 savedStudents.forEach((student,index)=>{
-
-const card =
-document.createElement("div");
-
+const card = document.createElement("div");
 card.className = "student-card";
-
 card.innerHTML =
 `<div class="student-actions">
 <button class="student-action" type="button" onclick="editStudent(${index})">✏️</button>
@@ -1235,56 +966,37 @@ card.innerHTML =
 <div class="student-name">${student.name}</div>
 <div class="student-info">${student.level}</div>
 <div class="student-info">${student.passFail}</div>`;
-
 list.appendChild(card);
-
 });
-
 }
 
 function deleteStudent(index){
-
 savedStudents.splice(index,1);
-
-localStorage.setItem(
-"savedSwimStudents",
-JSON.stringify(savedStudents)
-);
-
+localStorage.setItem("savedSwimStudents",JSON.stringify(savedStudents));
 renderSavedStudents();
-
 }
 
 function deleteAllStudents(){
-
 if(savedStudents.length === 0){
     return;
 }
-
 if(!confirm("Delete all saved students?")){
     return;
 }
-
 savedStudents = [];
 editingStudentIndex = null;
-
 localStorage.removeItem("savedSwimStudents");
-
 document.getElementById("saveStudentButton").textContent = "Save Student";
-
-renderSavedStudents();
-
+renderSavedStudents()
 }
 
 function editStudent(index){
 
-const student =
-savedStudents[index];
+const student = savedStudents[index];
 
 editingStudentIndex = index;
 
-const levelSelect =
-document.getElementById("level");
+const levelSelect = document.getElementById("level");
 
 levelSelect.value = student.levelKey;
 
@@ -1308,13 +1020,11 @@ window.scrollTo({top:0,behavior:"smooth"});
 
 function loadSavedStudents(){
 
-const saved =
-localStorage.getItem("savedSwimStudents");
+const saved = localStorage.getItem("savedSwimStudents");
 
 if(saved){
     savedStudents = JSON.parse(saved);
 }
-
 }
 
 async function exportPDF(){
@@ -1326,36 +1036,21 @@ if(savedStudents.length === 0){
     return;
 }
 
-const existingPdf =
-await fetch(
-"ZFillableComments.pdf"
-);
+const existingPdf = await fetch("ZFillableComments.pdf");
 
 if(!existingPdf.ok){
 alert("PDF not found. The file must be named exactly ZFillableComments.pdf and be in the same folder as the HTML.");
 return;
 }
 
-const bytes =
-await existingPdf.arrayBuffer();
-
-const templatePdf =
-await PDFLib.PDFDocument.load(bytes);
-
-const templateForm =
-templatePdf.getForm();
+const bytes = await existingPdf.arrayBuffer();
+const templatePdf = await PDFLib.PDFDocument.load(bytes);
+const templateForm = templatePdf.getForm();
 
 templateForm.flatten();
-
-const pdf =
-await PDFLib.PDFDocument.create();
-
-const font =
-await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
-
-const form =
-pdf.getForm();
-
+const pdf = await PDFLib.PDFDocument.create();
+const font = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
+const form = pdf.getForm();
 const fieldBoxes = [
 {
 name:[107,705.5,228,723.5],
@@ -1383,41 +1078,46 @@ comment:[255,92,555,258]
 }
 ];
 
-function addField(page,fieldName,text,box,size,multiline){
+function addField(page,name,text,box,size,multiline){
 
-const field =
-form.createTextField(fieldName);
+const field = form.createTextField(name);
+
+field.setText(text);
+
+if(multiline){
+field.enableMultiline();
+}
 
 field.acroField.setDefaultAppearance(
 `/${font.name} ${size} Tf 0 g`
 );
 
-if(multiline){
-    field.enableMultiline();
-}
-
-field.setText(text);
+const x = box[0];
+const y = box[1];
+const width = box[2] - box[0];
+const height = box[3] - box[1];
 
 field.addToPage(page,{
-    x:box[0],
-    y:box[1],
-    width:box[2] - box[0],
-    height:box[3] - box[1],
-    borderWidth:0
+x:x,
+y:y,
+width:width,
+height:height,
+borderWidth:0,
+borderColor:PDFLib.rgb(1,1,1),
+backgroundColor:PDFLib.rgb(1,1,1)
+});
+
+field.acroField.getWidgets().forEach(widget => {
+widget.dict.delete(PDFLib.PDFName.of("Border"));
+widget.dict.delete(PDFLib.PDFName.of("BS"));
 });
 
 }
 
-const pagesNeeded =
-Math.ceil(savedStudents.length / 3);
-
+const pagesNeeded = Math.ceil(savedStudents.length / 3);
 for(let pageIndex = 0; pageIndex < pagesNeeded; pageIndex++){
-
-const copiedPages =
-await pdf.copyPages(templatePdf,[0]);
-
-const page =
-copiedPages[0];
+const copiedPages = await pdf.copyPages(templatePdf,[0]);
+const page = copiedPages[0];
 
 pdf.addPage(page);
 
@@ -1429,15 +1129,9 @@ pageIndex * 3 + slot;
 if(studentIndex >= savedStudents.length){
     continue;
 }
-
-const student =
-savedStudents[studentIndex];
-
-const box =
-fieldBoxes[slot];
-
-const prefix =
-`student_${studentIndex + 1}`;
+const student = savedStudents[studentIndex];
+const box = fieldBoxes[slot];
+const prefix = `student_${studentIndex + 1}`;
 
 addField(page,`${prefix}_name`,student.name,box.name,10,false);
 addField(page,`${prefix}_level`,student.level,box.level,10,false);
@@ -1452,8 +1146,7 @@ addField(page,`${prefix}_comment`,student.comment,box.comment,11,true);
 
 form.updateFieldAppearances(font);
 
-const result =
-await pdf.save();
+const result = await pdf.save();
 
 const blob =
 new Blob(
@@ -1463,24 +1156,13 @@ type:"application/pdf"
 }
 );
 
-const url =
-URL.createObjectURL(blob);
-
-const a =
-document.createElement("a");
-
-a.href =
-url;
-
-a.download =
-"SwimComments.pdf";
-
+const url = URL.createObjectURL(blob);
+const a = document.createElement("a");
+a.href = url;
+a.download = "SwimComments.pdf";
 a.click();
-
 }catch(error){
-
 console.error(error);
-
 alert(error.message);
 
 }
