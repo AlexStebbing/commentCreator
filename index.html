@@ -803,31 +803,132 @@ document.querySelectorAll(".work").forEach(menu=>{fillSelect(menu,levelData.work
 }
 
 function fixCapitalization(text){
-text = text.toLowerCase();
-text = text.replace(/(^\w)|([.!?]\s+\w)/g,match => match.toUpperCase());
+text = text.replace(/(^\s*\w)|([.!?]\s+\w)/g,match => match.toUpperCase());
 return text;
 }
 
+function getFirstNameForComment(fullName){
+
+const firstName =
+fullName
+.trim()
+.split(/\s+/)[0]
+||
+"";
+
+return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+
+}
+
+function pick(list){
+    return list[Math.floor(Math.random() * list.length)];
+}
+
+function getFirstNameForComment(fullName){
+
+const firstName =
+fullName
+.trim()
+.split(/\s+/)[0]
+||
+"";
+
+return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+
+}
+
+const Openings = [
+    "Great work",
+    "Nice job",
+    "Excellent effort",
+    "Awesome swimming",
+    "Fantastic work",
+    "Well done",
+    "Great effort this session"
+];
+
+const NiceStarters = [
+    "You did a great job with your",
+    "You showed strong progress with your",
+    "You worked hard on your",
+    "You showed good improvement in your",
+    "You did well with your"
+];
+
+const WorkStarters = [
+    "For your",
+    "To keep improving your",
+    "Next time for your",
+    "A good goal for your",
+    "To continue practising your"
+];
+
+const Endings = [
+    "Keep up the great work.",
+    "Keep practising and your skills will keep improving.",
+    "Keep working hard and continue building confidence in the water.",
+    "Great effort this session, keep it up.",
+    "Keep challenging yourself and doing your best."
+];
+
+
 function generateComment(){
-const name = document.getElementById("name").value.trim();
-const positive1 = document.getElementById("positive1");
-const positive2 = document.getElementById("positive2");
-const positiveText1 = positive1.value;
-const positiveText2 = positive2.value;
-const positiveSkill2 = positive2.selectedOptions[0].dataset.skill;
-const work = [...document.querySelectorAll(".work")];
-const opening = openings[Math.floor(Math.random()*openings.length)];
-const ending = endings[Math.floor(Math.random()*endings.length)];
-const isFail = document.getElementById("passSwitch").checked;
+
+const fullName =
+document.getElementById("name").value.trim();
+
+const name =
+getFirstNameForComment(fullName);
+
+const positive1 =
+document.getElementById("positive1");
+
+const positive2 =
+document.getElementById("positive2");
+
+const positiveText1 =
+positive1.value;
+
+const positiveText2 =
+positive2.value;
+
+const work =
+[...document.querySelectorAll(".work")];
+
+const isFail =
+document.getElementById("passSwitch").checked;
+
+const opening =
+pick(Openings);
+
+const ending =
+pick(Endings);
 
 let comment;
+
 if(isFail){
-comment = `${opening} ${name}! Nice work on your ${positiveText1} For your ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value}. Also for your ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} Finally for your ${work[2].selectedOptions[0].dataset.skill}, ${work[2].value} ${ending}`;
+
+comment =
+`${opening}, ${name}! ${pick(NiceStarters)} ${positiveText1} ` +
+`${pick(WorkStarters)} ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value} ` +
+`${pick(WorkStarters)} ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} ` +
+`${pick(WorkStarters)} ${work[2].selectedOptions[0].dataset.skill}, ${work[2].value} ` +
+`${ending}`;
+
 }else{
-comment = `${opening} ${name}! Nice work on your ${positiveText1} For your ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value} Also for your ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} Great improvement in your ${positiveText2} ${ending}`;
+
+comment =
+`${opening}, ${name}! ${pick(NiceStarters)} ${positiveText1} ` +
+`${pick(WorkStarters)} ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value} ` +
+`${pick(WorkStarters)} ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} ` +
+`${pick(NiceStarters)} ${positiveText2} ` +
+`${ending}`;
 }
-document.getElementById("output").textContent = fixCapitalization(comment);
+document.getElementById("output").value =
+fixCapitalization(comment);
 }
+
+
 
 function copyComment(){
 const name = document.getElementById("name").value;
@@ -1044,13 +1145,19 @@ return;
 }
 
 const bytes = await existingPdf.arrayBuffer();
+
 const templatePdf = await PDFLib.PDFDocument.load(bytes);
+
 const templateForm = templatePdf.getForm();
 
 templateForm.flatten();
+
 const pdf = await PDFLib.PDFDocument.create();
+
 const font = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
+
 const form = pdf.getForm();
+
 const fieldBoxes = [
 {
 name:[107,705.5,228,723.5],
@@ -1115,8 +1222,11 @@ widget.dict.delete(PDFLib.PDFName.of("BS"));
 }
 
 const pagesNeeded = Math.ceil(savedStudents.length / 3);
+
 for(let pageIndex = 0; pageIndex < pagesNeeded; pageIndex++){
+
 const copiedPages = await pdf.copyPages(templatePdf,[0]);
+
 const page = copiedPages[0];
 
 pdf.addPage(page);
@@ -1129,8 +1239,11 @@ pageIndex * 3 + slot;
 if(studentIndex >= savedStudents.length){
     continue;
 }
+
 const student = savedStudents[studentIndex];
+
 const box = fieldBoxes[slot];
+
 const prefix = `student_${studentIndex + 1}`;
 
 addField(page,`${prefix}_name`,student.name,box.name,10,false);
