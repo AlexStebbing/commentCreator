@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- pdf-lib is the library used later to write text into the PDF template. -->
 <script src="https://unpkg.com/pdf-lib"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Swim Comment Creator</title>
 <style>
+/* Page base styles.
+   The body sets the app width, centers it on the page, and starts in dark mode.
+   Most of the app inherits the font and text color from here. */
 body{font-family:Arial,sans-serif;max-width:850px;margin:30px
 auto;padding:20px;background:#1b1c1e;color:#ffffff}
+
+/* Basic form layout.
+   These rules make labels stack above controls and give inputs, dropdowns,
+   buttons, and the comment box the same width and spacing. */
 h1{text-align:center}label{display:block;margin-top:14px;font-weight:bold}
 input,select,button,textarea{width:100%;padding:10px;margin-top:5px;box-sizing:border-box;border:1px solid #0c1824;border-radius:6px;font-size:15px}
 button{margin-top:22px;background:#0c1824;color:white;border:0;cursor:pointer;font-weight:bold}
+
+/* Compact original layout helpers.
+   .row is used for Season and Year so they can sit side by side on wider screens.
+   The media query stacks those fields on small screens. */
 button:hover{background:#1f5fbf}#output{margin-top:24px;padding:16px;border:1px solid #000000;background:white;white-space:pre-wrap;min-height:90px;border-radius:6px}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.small{font-size:13px;color:#555;margin-top:6px}@media(max-width:700px){.row{grid-template-columns:1fr}}
 
 
 
-
+/* Dark-mode input styling.
+   These rules make form fields match the dark background instead of using the
+   browser's default white inputs. */
 input{
     background:#0c1824;
     color:#ffffff;
@@ -25,21 +39,27 @@ input{
     border-radius:10px;
 }
 
+/* Placeholder text needs a lighter gray so it can still be read on dark inputs. */
 input::placeholder{
     color:#cfcfcf;
 }
 
+/* Dropdown styling for the normal dark theme. */
 select{
     background:#0c1824;
     color:#ffffff;
     border:1px solid #000000;
 }
 
+/* Dropdown option colors can be different from the closed select box in browsers,
+   so the options get their own background and text color. */
 select option{
     background:#1e3d5b;
     color:#ffffff;
 }
 
+/* The output textarea is where the generated comment appears.
+   white-space:pre-wrap keeps line breaks if a user edits or pastes multiline text. */
 #output{
     background:#0c1824;
     color:#ffffff;
@@ -54,11 +74,15 @@ select option{
     white-space:pre-wrap;
 }
 
+/* Light theme base colors.
+   The toggleTheme function adds or removes the "light" class on the body. */
 body.light{
     background:#ffffff;
     color:#000000;
 }
 
+/* Light theme form controls.
+   These override the dark-mode fields when body.light is active. */
 body.light input,
 body.light select,
 body.light #output{
@@ -67,16 +91,20 @@ body.light #output{
     border:1px solid #cccccc;
 }
 
+/* Light theme dropdown options. */
 body.light select option{
     background:#ffffff;
     color:#000000;
 }
 
+/* Light theme button color. */
 body.light button{
     background:#2563eb;
     color:#ffffff;
 }
 
+/* Theme toggle position.
+   This switch sits in the top-left corner and controls dark/light mode. */
 .theme-toggle{
 
 position:absolute;
@@ -93,6 +121,8 @@ gap:10px;
 
 }
 
+/* Toggle switch shell.
+   The real checkbox is hidden, and the visible switch is made from .slider. */
 .switch{
     position:relative;
     display:inline-block;
@@ -101,12 +131,14 @@ gap:10px;
     height:34px;
 }
 
+/* Hide the checkbox itself but keep it clickable through the label. */
 .switch input{
     opacity:0;
     width:0;
     height:0;
 }
 
+/* Track of the toggle switch. */
 .slider{
     position:absolute;
     top:0;
@@ -119,6 +151,7 @@ gap:10px;
     transition:.25s;
 }
 
+/* Round knob inside the switch track. */
 .slider::before{
 
     content:"";
@@ -132,6 +165,8 @@ gap:10px;
     transition:.25s;
 }
 
+/* Checked switch state.
+   The blue background and translated knob show that the switch is on. */
 input:checked + .slider{
     background:#2563eb;
 }
@@ -145,6 +180,7 @@ body.light{
     color:#000000;
 }
 
+/* Extra light-theme overrides for controls that need to stay readable. */
 body.light #name,
 body.light select,
 body.light #output{
@@ -162,6 +198,8 @@ body.light button{
     background:#2563eb;
 }
 
+/* Pass/fail toggle position.
+   This switch is separate from the theme toggle and controls which menus appear. */
 .result-toggle{
 position:absolute;
 top:70px;
@@ -171,21 +209,29 @@ align-items:center;
 gap:10px;
 }
 
+/* PASS or FAIL text beside the result switch. */
 #resultLabel{
 font-weight:bold;
 }
 
+/* Utility class used by JavaScript to hide pass-only or fail-only sections. */
 .hidden{
 display:none;
 }
 
+/* Final comment box.
+   Users can resize this vertically if they want more space while editing. */
 #output{
     width:100%;
     min-height:180px;
     resize:vertical;
     font-family:Arial,sans-serif;
+    line-height:1.35;
+    overflow:hidden;
 }
 
+/* Saved Students panel.
+   This groups the saved student cards below the comment generator controls. */
 .saved-tab{
     margin-top:30px;
     padding:20px;
@@ -194,17 +240,21 @@ display:none;
     border:1px solid #374151;
 }
 
+/* Saved Students heading spacing. */
 .saved-tab h2{
     margin-top:0;
     text-align:center;
 }
 
+/* Grid layout for saved student cards.
+   Three columns on desktop, one column on small screens. */
 .student-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:14px;
 }
 
+/* Individual saved student card. */
 .student-card{
     position:relative;
     padding:14px;
@@ -214,17 +264,21 @@ display:none;
     min-height:70px;
 }
 
+/* Student card name line. */
 .student-name{
     font-weight:bold;
     font-size:16px;
 }
 
+/* Student card detail lines, such as level and PASS/FAIL. */
 .student-info{
     font-size:13px;
     margin-top:6px;
     color:#cfcfcf;
 }
 
+/* Edit/Delete button area.
+   It is hidden until the user hovers over a saved student card. */
 .student-actions{
     display:none;
     position:absolute;
@@ -233,10 +287,12 @@ display:none;
     gap:8px;
 }
 
+/* Show Edit/Delete buttons when hovering over a saved student. */
 .student-card:hover .student-actions{
     display:flex;
 }
 
+/* Small action buttons inside each saved student card. */
 .student-action{
     width:auto;
     margin:0;
@@ -248,10 +304,12 @@ display:none;
     cursor:pointer;
 }
 
+/* Delete is red because it removes data. */
 .student-action.delete{
     background:#dc2626;
 }
 
+/* Light theme saved-student card colors. */
 body.light .saved-tab,
 body.light .student-card{
     background:#ffffff;
@@ -259,11 +317,14 @@ body.light .student-card{
     border:1px solid #cccccc;
 }
 
+/* Light theme muted text inside saved cards. */
 body.light .student-info{
     color:#444444;
 }
 
 
+/* Header row above saved student cards.
+   It keeps the title on the left and Delete All on the right. */
 .saved-header{
     display:flex;
     align-items:center;
@@ -271,11 +332,13 @@ body.light .student-info{
     gap:12px;
 }
 
+/* Override the centered h2 style when it is inside the saved header row. */
 .saved-header h2{
     margin:0;
     text-align:left;
 }
 
+/* Delete All button for clearing every saved student at once. */
 .delete-all-button{
     width:auto;
     margin: 5px;;
@@ -288,10 +351,13 @@ body.light .student-info{
     font-weight:bold;
 }
 
+/* Darker red on hover gives feedback before deleting all students. */
 .delete-all-button:hover{
     background:#b91c1c;
 }
 
+/* Small screen layout.
+   Saved cards become one full-width column on phones and narrow windows. */
 @media(max-width:700px){
     .student-grid{
         grid-template-columns:1fr;
@@ -301,6 +367,9 @@ body.light .student-info{
 </style>
 </head>
 <body>
+<!-- Pass/fail switch.
+     Checked means FAIL, unchecked means PASS. JavaScript uses this to decide
+     whether to show two work-on skills or three work-on skills. -->
 <div class="result-toggle">
 
 <label class="switch">
@@ -321,6 +390,8 @@ PASS
 
 <h1>Swim Comment Creator</h1>
 
+<!-- Theme switch.
+     This only changes colors. It does not affect saved students or comments. -->
 <div class="theme-toggle">
 <label class="switch">
 <input type="checkbox" id="themeSwitch" onchange="toggleTheme()">
@@ -330,8 +401,15 @@ PASS
 DARK
 </span>
 </div>
+
+<!-- Basic student details.
+     These values are used in copied text, saved student cards, and PDF export. -->
 <label>Instructor</label><input id="instructor" placeholder="Enter instructor">
 <label>Kid's Name</label><input id="name" placeholder="Enter name">
+
+<!-- Session date.
+     Season options are written directly in the HTML.
+     Year options are created by JavaScript in LevelManager.fillYears(). -->
 <div class="row">
     <div>
         <label>Season</label>
@@ -348,26 +426,53 @@ DARK
         <select id="year"></select>
     </div>
 </div>
+
+<!-- Swim level selector.
+     The options are created from the big levels object in the script.
+     Changing the level rebuilds the nice-thing and work-on dropdowns. -->
 <label>Swim Level</label>
 <select id="level" onchange="updateMenus()"></select>
+
+<!-- First positive skill.
+     This appears for both PASS and FAIL comments. -->
 <label>Nice thing #1</label>
 <select id="positive1"></select>
 
+<!-- Work-on skills.
+     Work on #1 and #2 are always visible.
+     Work on #3 only appears when the result switch is set to FAIL. -->
 <label>Work on #1</label><select class="work"></select>
 <label>Work on #2</label><select class="work"></select>
 </div>
+
+<!-- Fail-only section.
+     JavaScript hides this when the result is PASS. -->
 <div id="failOnly">
 <label>Work on #3</label>
 <select class="work" id="work3"></select>
 </div>
+
+<!-- Pass-only section.
+     JavaScript hides this when the result is FAIL. -->
 <div id="passOnly">
 <label>Nice thing #2</label>
 <select id="positive2"></select>
 </div>
+
+<!-- Main action buttons.
+     Generate writes a comment into the textarea.
+     Copy puts a formatted report-style comment on the clipboard.
+     Save stores the current student in localStorage and shows them below. -->
 <button onclick="generateComment()">Generate Comment</button>
 <button onclick="copyComment()" type="button">Copy Comment</button>
 <button onclick="saveStudent()" type="button" id="saveStudentButton">Save Student</button>
+
+<!-- Generated comment output.
+     The user can edit this text before copying, saving, or exporting. -->
 <textarea id="output" placeholder="Generated comment will appear here"></textarea>
+
+<!-- Saved student section.
+     Cards are inserted into #studentList by StudentList.render(). -->
 <div class="saved-tab">
 <div class="saved-header">
 <h2>Saved Students</h2>
@@ -375,6 +480,9 @@ DARK
 </div>
 <div id="studentList" class="student-grid"></div>
 </div>
+
+<!-- PDF export.
+     This uses all saved students, not just the student currently in the form. -->
 <button onclick="exportPDF()" type="button">Export PDF</button>
 <script>
 
@@ -405,6 +513,260 @@ const endings = [
 
 let savedStudents = [];
 let editingStudentIndex = null;
+
+// StudentStorage handles saving and loading students in the browser.
+// localStorage keeps the saved list even after the page is refreshed.
+// This class is intentionally small: the rest of the app should not need to know
+// the exact localStorage key or the JSON.stringify / JSON.parse details.
+class StudentStorage {
+    constructor(){
+        this.key = "savedSwimStudents";
+    }
+
+    load(){
+        // localStorage only stores strings, so saved student arrays must be parsed
+        // back into real JavaScript arrays before the app can use them.
+        const saved = localStorage.getItem(this.key);
+        return saved ? JSON.parse(saved) : [];
+    }
+
+    save(students){
+        // Convert the student array into a string so the browser can store it.
+        localStorage.setItem(this.key,JSON.stringify(students));
+    }
+
+    clear(){
+        localStorage.removeItem(this.key);
+    }
+}
+
+// FormController keeps all form-reading and form-writing code in one place.
+// This makes the rest of the app easier to read because other objects can ask
+// formController for the current level, pass/fail state, output text, or saved student data.
+class FormController {
+    constructor(){
+        // Friendly names mapped to the real HTML element IDs.
+        // Example: formController.get("saveButton") finds the element with id="saveStudentButton".
+        this.fields = {
+            instructor:"instructor",
+            name:"name",
+            season:"season",
+            year:"year",
+            level:"level",
+            positive1:"positive1",
+            positive2:"positive2",
+            passSwitch:"passSwitch",
+            resultLabel:"resultLabel",
+            output:"output",
+            saveButton:"saveStudentButton",
+            passOnly:"passOnly",
+            failOnly:"failOnly",
+            studentList:"studentList"
+        };
+    }
+
+    get(id){
+        // Allows code to use formController.get("saveButton") instead of remembering
+        // that the real HTML id is "saveStudentButton".
+        return document.getElementById(this.fields[id] || id);
+    }
+
+    // There are multiple "work on" menus, so this finds all of them as an array.
+    get workMenus(){
+        return [...document.querySelectorAll(".work")];
+    }
+
+    get isFail(){
+        return this.get("passSwitch").checked;
+    }
+
+    get selectedLevelKey(){
+        return this.get("level").value;
+    }
+
+    get selectedLevel(){
+        // The level dropdown stores a key like "preschool1".
+        // This returns the matching level object from the levels data.
+        return levels[this.selectedLevelKey];
+    }
+
+    get outputText(){
+        // The output is a textarea now, but textContent is kept as a fallback
+        // in case this element is changed back to a div later.
+        const output = this.get("output");
+        return (output.value || output.textContent).trim();
+    }
+
+    set outputText(text){
+        this.get("output").value = text;
+        this.fitOutputBox();
+    }
+
+    setSaveMode(isEditing){
+        this.get("saveButton").textContent = isEditing ? "Update Student" : "Save Student";
+    }
+
+    // Keeps the comment box editable after a comment is generated.
+    // Short comments get a larger font. Longer comments get a smaller font and
+    // the textarea grows taller, so the user can still click into the box and add text.
+    fitOutputBox(){
+        const output = this.get("output");
+        const length = output.value.length;
+
+        let fontSize = 18;
+
+        if(length > 650){
+            fontSize = 12;
+        }else if(length > 450){
+            fontSize = 14;
+        }else if(length > 250){
+            fontSize = 16;
+        }
+
+        output.style.fontSize = `${fontSize}px`;
+        output.style.height = "auto";
+        output.style.height = `${Math.max(180,output.scrollHeight)}px`;
+    }
+
+    // Builds one complete student object from the current form.
+    // If the comment box is empty, it generates a comment first so saved students
+    // always have a comment ready for copying and PDF export.
+    collectStudent(){
+        if(this.outputText === ""){
+            commentCreator.generate();
+        }
+
+        return {
+            // This object shape is the app's "student record".
+            // studentList saves it, commentCreator copies it, and pdfExporter prints it.
+            name:this.get("name").value.trim(),
+            instructor:this.get("instructor").value.trim(),
+            season:this.get("season").value,
+            year:this.get("year").value,
+            levelKey:this.selectedLevelKey,
+            level:this.selectedLevel.name,
+            passFail:this.isFail ? "FAIL" : "PASS",
+            nextLevel:levelManager.getNextLevelName(),
+            comment:this.outputText
+        };
+    }
+
+    // Puts a saved student back into the form so they can be edited.
+    // The level menus must be rebuilt before restoring the saved choices.
+    loadStudent(student){
+        // Set the level first because the level controls which dropdown choices exist.
+        this.get("level").value = student.levelKey;
+        levelManager.updateMenus();
+
+        this.get("name").value = student.name;
+        this.get("instructor").value = student.instructor;
+        this.get("season").value = student.season;
+        this.get("year").value = student.year;
+        this.get("passSwitch").checked = student.passFail === "FAIL";
+        this.get("resultLabel").textContent = student.passFail;
+        this.outputText = student.comment;
+
+        levelManager.updatePassFailMenus();
+    }
+}
+
+// LevelManager controls everything related to swim levels and dropdown menus.
+// It converts the large level data object into the select options shown on screen.
+class LevelManager {
+    // Creates the main Swim Level dropdown from the keys in the levels object.
+    setupLevelOptions(){
+        const levelSelect = formController.get("level");
+        Object.keys(levels).forEach(key=>{
+            // key is the internal name, like "swimmer5".
+            // levels[key].name is the friendly name shown to the user.
+            const option = document.createElement("option");
+            option.value = key;
+            option.textContent = levels[key].name;
+            levelSelect.appendChild(option);
+        });
+    }
+
+    // Fills the year dropdown. Increase the end year here when needed.
+    fillYears(){
+        const yearSelect = formController.get("year");
+        yearSelect.innerHTML = "";
+        for(let year = 2026; year <= 2040; year++){
+            const option = document.createElement("option");
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
+        }
+    }
+
+    // Reusable dropdown builder for both nice things and work-on items.
+    // The visible text is item.short, while the full sentence is stored as value.
+    fillSelect(select,items){
+        select.innerHTML="";
+
+        items.forEach(item=>{
+            // The dropdown displays the short label, but keeps extra data:
+            // value = full sentence for the generated comment
+            // dataset.skill = cleaner skill label, such as "front crawl"
+            const option = document.createElement("option");
+            option.textContent = item.short;
+            option.value = item.full;
+            option.dataset.short = item.short;
+            option.dataset.skill = item.skill || inferSkill(item.short);
+            select.appendChild(option);
+        });
+    }
+
+    // Nice thing menus are based on the same skills as work-on menus, but they use
+    // the positive "nice" sentence instead of the improvement sentence.
+    makePositiveFromWorkOn(item){
+        const skill = item.skill || inferSkill(item.short);
+
+        return{
+            short:item.short,
+            skill:skill,
+            full:item.nice
+        };
+    }
+
+    // Refreshes all skill menus whenever the swim level changes.
+    updateMenus(){
+        const levelData = formController.selectedLevel;
+        // Build positive choices from the same level skills so every level stays
+        // consistent between strengths and work-on areas.
+        const levelPositives = levelData.workOn.map(item=>this.makePositiveFromWorkOn(item));
+        this.fillSelect(formController.get("positive1"),levelPositives);
+        this.fillSelect(formController.get("positive2"),levelPositives);
+        formController.workMenus.forEach(menu=>this.fillSelect(menu,levelData.workOn));
+    }
+
+    // Pass shows two work-on items and one extra nice thing.
+    // Fail shows three work-on items and hides the second nice thing.
+    updatePassFailMenus(){
+        const isFail = formController.isFail;
+        formController.get("passOnly").classList.toggle("hidden",isFail);
+        formController.get("failOnly").classList.toggle("hidden",!isFail);
+    }
+
+    // If the student passes, recommend the next level.
+    // If the student does not pass, recommend the same level again.
+    getNextLevelName(){
+        const keys = Object.keys(levels);
+        const currentKey = formController.selectedLevelKey;
+        const index = keys.indexOf(currentKey);
+
+        if(formController.isFail){
+            // A failed student should register in the same level again.
+            return levels[currentKey].name;
+        }
+
+        if(index < keys.length - 1){
+            // A passing student moves to the next level in the levels object order.
+            return levels[keys[index + 1]].name;
+        }
+
+        return levels[currentKey].name;
+    }
+}
 
 const levels={
 "preschool1":{name:"Preschool 1",workOn:[
@@ -745,6 +1107,8 @@ function inferSkill(short){
 
     const s = short.toLowerCase();
 
+    // Some skill names are written in different ways across the level data.
+    // This groups similar names into a cleaner skill label for generated comments.
     if(s.includes("front crawl")) return "front crawl";
     if(s.includes("back crawl")) return "back crawl";
     if(s.includes("breaststroke")) return "breaststroke";
@@ -766,40 +1130,19 @@ function inferSkill(short){
     return short;
 }
 
+// These wrapper functions keep the old HTML button attributes working.
+// The main logic now lives in LevelManager, Form, CommentCreator, StudentList,
+// and PdfExporter.
 function fillSelect(select,items){
-select.innerHTML="";
-
-items.forEach(item=>{
-const option = document.createElement("option");
-option.textContent = item.short;
-option.value = item.full;
-option.dataset.short = item.short;
-option.dataset.skill = item.skill || inferSkill(item.short);
-select.appendChild(option);
-});
-
+levelManager.fillSelect(select,items);
 }
 
 function makePositiveFromWorkOn(item){
-
-const skill = item.skill || inferSkill(item.short);
-
-return{
-short:item.short,
-skill:skill,
-full:item.nice
-};
-
+return levelManager.makePositiveFromWorkOn(item);
 }
 
 function updateMenus(){
-
-const level = document.getElementById("level").value;
-const levelData = levels[level];
-const levelPositives = levelData.workOn.map(makePositiveFromWorkOn);
-fillSelect(document.getElementById("positive1"),levelPositives);
-fillSelect(document.getElementById("positive2"),levelPositives);
-document.querySelectorAll(".work").forEach(menu=>{fillSelect(menu,levelData.workOn);});
+levelManager.updateMenus();
 }
 
 function fixCapitalization(text){
@@ -871,111 +1214,383 @@ const Endings = [
     "Keep challenging yourself and doing your best."
 ];
 
+// CommentCreator builds the written swim comment.
+// It chooses random sentence starters so comments do not all sound identical,
+// then combines selected strengths and work-on skills into one paragraph.
+class CommentCreator {
+    generate(){
+        // Use only the first name in the generated paragraph so the comment sounds
+        // natural, even if the full saved name includes a last name.
+        const name = getFirstNameForComment(formController.get("name").value.trim());
+
+        // positiveText1/2 are already full positive sentences because the positive
+        // dropdowns are created from item.nice in levelManager.makePositiveFromWorkOn().
+        const positiveText1 = formController.get("positive1").value;
+        const positiveText2 = formController.get("positive2").value;
+
+        // The work array contains Work on #1, Work on #2, and Work on #3.
+        // Work on #3 is only used in FAIL comments.
+        const work = formController.workMenus;
+        const opening = pick(Openings);
+        const ending = pick(Endings);
+
+        // Creates one improvement sentence from a selected work-on menu.
+        // The menu value is the long instruction, while dataset.skill is the short skill name.
+        const workLine = menu =>
+            `${pick(WorkStarters)} ${menu.selectedOptions[0].dataset.skill}, ${menu.value} `;
+
+        let comment;
+
+        if(formController.isFail){
+            // Fail comments include one positive note and three work-on notes.
+            // This gives the parent/student clear next steps for repeating the level.
+            comment =
+                `${opening}, ${name}! ${pick(NiceStarters)} ${positiveText1} ` +
+                workLine(work[0]) +
+                workLine(work[1]) +
+                workLine(work[2]) +
+                `${ending}`;
+        }else{
+            // Pass comments include two positive notes and two work-on notes.
+            // This still gives improvement advice while sounding more achievement-focused.
+            comment =
+                `${opening}, ${name}! ${pick(NiceStarters)} ${positiveText1} ` +
+                workLine(work[0]) +
+                workLine(work[1]) +
+                `${pick(NiceStarters)} ${positiveText2} ` +
+                `${ending}`;
+        }
+
+        // Clean up the first letters after periods before showing the final comment.
+        formController.outputText = fixCapitalization(comment);
+    }
+
+    // Copies the current student information in a report-card style format.
+    // collectStudent also auto-generates a comment if the output box is empty.
+    copy(){
+        const student = formController.collectStudent();
+        const finalText =
+`Name: ${student.name}
+Level: ${student.level}
+Instructor: ${student.instructor}
+Date: ${student.season} ${student.year}
+Please Register In: ${student.nextLevel}
+Success & Challenges: ${student.comment}`;
+
+        navigator.clipboard.writeText(finalText);
+    }
+}
+
+// StudentList manages the saved student list shown at the bottom of the page.
+// savedStudents is the in-memory list, and studentStorage keeps it between visits.
+class StudentList {
+    saveCurrent(){
+        const student = formController.collectStudent();
+
+        if(student.name === ""){
+            // A name is required because saved cards and PDFs need a clear label.
+            alert("Enter the student's name before saving.");
+            return;
+        }
+
+        if(editingStudentIndex === null){
+            // No existing card is being edited, so this is a brand-new saved student.
+            savedStudents.push(student);
+        }else{
+            // Replace the card being edited, then return the button to save mode.
+            savedStudents[editingStudentIndex] = student;
+            editingStudentIndex = null;
+            formController.setSaveMode(false);
+        }
+
+        studentStorage.save(savedStudents);
+        this.render();
+    }
+
+    // Rebuilds the visible saved-student cards from the savedStudents array.
+    // This is called after saving, deleting, clearing, or loading saved students.
+    render(){
+        const list = formController.get("studentList");
+        list.innerHTML = "";
+
+        savedStudents.forEach((student,index)=>{
+            // The index connects the card buttons back to the matching array item.
+            // For example, editStudent(2) edits savedStudents[2].
+            const card = document.createElement("div");
+            card.className = "student-card";
+            card.innerHTML =
+`<div class="student-actions">
+<button class="student-action" type="button" onclick="editStudent(${index})">Edit</button>
+<button class="student-action delete" type="button" onclick="deleteStudent(${index})">Delete</button>
+</div>
+<div class="student-name">${student.name}</div>
+<div class="student-info">${student.level}</div>
+<div class="student-info">${student.passFail}</div>`;
+            list.appendChild(card);
+        });
+    }
+
+    delete(index){
+        // Remove exactly one saved student, then save the updated list to localStorage.
+        savedStudents.splice(index,1);
+        studentStorage.save(savedStudents);
+        this.render();
+    }
+
+    deleteAll(){
+        if(savedStudents.length === 0){
+            // Nothing to delete, so there is no need to show a confirmation box.
+            return;
+        }
+
+        if(!confirm("Delete all saved students?")){
+            return;
+        }
+
+        savedStudents = [];
+        editingStudentIndex = null;
+        studentStorage.clear();
+        formController.setSaveMode(false);
+        this.render();
+    }
+
+    // Loads one saved student back into the form for editing.
+    edit(index){
+        const student = savedStudents[index];
+        // editingStudentIndex tells saveCurrent() to update this card instead of
+        // creating a duplicate saved student.
+        editingStudentIndex = index;
+        formController.loadStudent(student);
+        formController.setSaveMode(true);
+        window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+    load(){
+        // Pull saved students from browser storage when the page first opens.
+        savedStudents = studentStorage.load();
+    }
+}
+
+// PdfExporter creates the final SwimComments.pdf using ZFillableComments.pdf as the template.
+// The template has three comment areas per page, so saved students are exported
+// in groups of three. More than three students creates extra copied pages.
+class PdfExporter {
+    constructor(){
+        // Coordinates for the text boxes on the PDF page.
+        // Each slot represents one student area: top, middle, and bottom.
+        // Numbers are PDF points measured from the bottom-left corner of the page.
+        this.fieldBoxes = [
+            {
+                name:[107,705.5,228,723.5],
+                level:[107,681.5,228,699.5],
+                instructor:[107,657.5,228,675.5],
+                date:[107,633.5,228,651.5],
+                next:[150,585.5,228,603.5],
+                comment:[255,552,555,718]
+            },
+            {
+                name:[107,479,228,497],
+                level:[107,455,228,473],
+                instructor:[107,431,228,449],
+                date:[107,407,228,425],
+                next:[150,359,228,377],
+                comment:[255,322,555,492]
+            },
+            {
+                name:[107,246.5,228,264.5],
+                level:[107,222.5,228,240.5],
+                instructor:[107,198.5,228,216.5],
+                date:[107,174.5,228,192.5],
+                next:[150,126,228,144],
+                comment:[255,92,555,258]
+            }
+        ];
+    }
+
+    // Coordinates for the text boxes on the PDF page.
+    // Each slot represents one student area: top, middle, and bottom.
+    // Numbers are PDF points measured from the bottom-left corner of the page.
+    // Adds one invisible text field on top of the copied PDF template.
+    // The fields are white/no-border so the exported text appears to sit directly
+    // inside the existing boxes on the template.
+    addField(form,page,font,name,text,box,size,multiline){
+        const field = form.createTextField(name);
+
+        field.setText(text);
+
+        if(multiline){
+            field.enableMultiline();
+        }
+
+        field.acroField.setDefaultAppearance(
+            `/${font.name} ${size} 0 Tf 0 g`
+        );
+
+        const x = box[0];
+        const y = box[1];
+        const width = box[2] - box[0];
+        const height = box[3] - box[1];
+
+        // pdf-lib needs x/y/width/height instead of the two-corner box format.
+        field.addToPage(page,{
+            x:x,
+            y:y,
+            width:width,
+            height:height,
+            borderWidth:0,
+            borderColor:PDFLib.rgb(1,1,1),
+            backgroundColor:PDFLib.rgb(1,1,1)
+        });
+
+        // Remove PDF widget borders so the result looks like normal typed text.
+        field.acroField.getWidgets().forEach(widget => {
+            widget.dict.delete(PDFLib.PDFName.of("Border"));
+            widget.dict.delete(PDFLib.PDFName.of("BS"));
+        });
+    }
+
+    async export(){
+        try{
+            if(savedStudents.length === 0){
+                // Exporting from the saved list avoids accidentally printing a
+                // half-filled form that the user has not saved yet.
+                alert("Save at least one student before exporting.");
+                return;
+            }
+
+            const existingPdf = await fetch("ZFillableComments.pdf");
+
+            if(!existingPdf.ok){
+                // The HTML file and PDF template must stay in the same folder
+                // because fetch() looks beside preview.html for this file.
+                alert("PDF not found. The file must be named exactly ZFillableComments.pdf and be in the same folder as the HTML.");
+                return;
+            }
+
+            const bytes = await existingPdf.arrayBuffer();
+            const templatePdf = await PDFLib.PDFDocument.load(bytes);
+            const templateForm = templatePdf.getForm();
+
+            // Flatten the original template so its built-in fields become part of
+            // the page background before new fields are added on top.
+            templateForm.flatten();
+
+            const pdf = await PDFLib.PDFDocument.create();
+            const font = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
+            const form = pdf.getForm();
+            // One template page holds three students.
+            // Math.ceil makes sure a leftover one or two students still get a page.
+            const pagesNeeded = Math.ceil(savedStudents.length / 3);
+
+            // Copy the template once for every group of three saved students.
+            for(let pageIndex = 0; pageIndex < pagesNeeded; pageIndex++){
+                const copiedPages = await pdf.copyPages(templatePdf,[0]);
+                const page = copiedPages[0];
+
+                pdf.addPage(page);
+
+                for(let slot = 0; slot < 3; slot++){
+                    // Convert page number and slot number into the savedStudents index.
+                    // Page 0 uses students 0,1,2. Page 1 uses students 3,4,5.
+                    const studentIndex = pageIndex * 3 + slot;
+
+                    // The final page might have fewer than three students.
+                    if(studentIndex >= savedStudents.length){
+                        continue;
+                    }
+
+                    const student = savedStudents[studentIndex];
+                    const box = this.fieldBoxes[slot];
+                    const prefix = `student_${studentIndex + 1}`;
+
+                    // Create separate field names so every student keeps their own text.
+                    this.addField(form,page,font,`${prefix}_name`,student.name,box.name,10,false);
+                    this.addField(form,page,font,`${prefix}_level`,student.level,box.level,10,false);
+                    this.addField(form,page,font,`${prefix}_instructor`,student.instructor,box.instructor,10,false);
+                    this.addField(form,page,font,`${prefix}_date`,`${student.season} ${student.year}`,box.date,10,false);
+                    this.addField(form,page,font,`${prefix}_next`,student.nextLevel,box.next,10,false);
+                    this.addField(form,page,font,`${prefix}_comment`,student.comment,box.comment,11,true);
+                }
+            }
+
+            form.updateFieldAppearances(font);
+
+            // Save the generated PDF and trigger a browser download.
+            const result = await pdf.save();
+            const blob = new Blob([result],{type:"application/pdf"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+
+            a.href = url;
+            a.download = "SwimComments.pdf";
+            a.click();
+        }catch(error){
+            console.error(error);
+            alert(error.message);
+        }
+    }
+}
+
+// SwimCommentApp is the main coordinator.
+// It does not generate comments or export PDFs itself. Instead, it starts the
+// smaller classes in the correct order when the page loads.
+class SwimCommentApp {
+    setup(){
+        formController.get("passSwitch").addEventListener("change",function(){
+            formController.get("resultLabel").textContent = this.checked ? "FAIL" : "PASS";
+            levelManager.updatePassFailMenus();
+        });
+
+        // Re-fit the comment box while the user edits it manually.
+        // This is what keeps the box usable after a generated comment is changed.
+        formController.get("output").addEventListener("input",function(){
+            formController.fitOutputBox();
+        });
+
+        levelManager.setupLevelOptions();
+        levelManager.fillYears();
+        levelManager.updateMenus();
+        formController.fitOutputBox();
+    }
+
+    start(){
+        this.setup();
+        levelManager.updatePassFailMenus();
+        studentList.load();
+        studentList.render();
+    }
+}
+
+// Create one object from each class.
+// The class is the blueprint; these lowercase variables are the real working
+// objects that the app uses after the page loads.
+const studentStorage = new StudentStorage();
+const formController = new FormController();
+const levelManager = new LevelManager();
+const commentCreator = new CommentCreator();
+const studentList = new StudentList();
+const pdfExporter = new PdfExporter();
+const app = new SwimCommentApp();
+
 
 function generateComment(){
-
-const fullName =
-document.getElementById("name").value.trim();
-
-const name =
-getFirstNameForComment(fullName);
-
-const positive1 =
-document.getElementById("positive1");
-
-const positive2 =
-document.getElementById("positive2");
-
-const positiveText1 =
-positive1.value;
-
-const positiveText2 =
-positive2.value;
-
-const work =
-[...document.querySelectorAll(".work")];
-
-const isFail =
-document.getElementById("passSwitch").checked;
-
-const opening =
-pick(Openings);
-
-const ending =
-pick(Endings);
-
-let comment;
-
-if(isFail){
-
-comment =
-`${opening}, ${name}! ${pick(NiceStarters)} ${positiveText1} ` +
-`${pick(WorkStarters)} ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value} ` +
-`${pick(WorkStarters)} ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} ` +
-`${pick(WorkStarters)} ${work[2].selectedOptions[0].dataset.skill}, ${work[2].value} ` +
-`${ending}`;
-
-}else{
-
-comment =
-`${opening}, ${name}! ${pick(NiceStarters)} ${positiveText1} ` +
-`${pick(WorkStarters)} ${work[0].selectedOptions[0].dataset.skill}, ${work[0].value} ` +
-`${pick(WorkStarters)} ${work[1].selectedOptions[0].dataset.skill}, ${work[1].value} ` +
-`${pick(NiceStarters)} ${positiveText2} ` +
-`${ending}`;
-}
-document.getElementById("output").value =
-fixCapitalization(comment);
+commentCreator.generate();
 }
 
 
 
 function copyComment(){
-const name = document.getElementById("name").value;
-const level = levels[document.getElementById("level").value].name;
-const instructor = document.getElementById("instructor").value;
-const season = document.getElementById("season").value;
-const year = document.getElementById("year").value;
-const date = `${season} ${year}`;
-const next = getNextLevelName();
-const output = document.getElementById("output");
-const comment =(output.value || output.textContent).trim();
-
-const finalText = 
-`Name: ${name}
-Level: ${level}
-Instructor: ${instructor}
-Date: ${date}
-Please Register In: ${next}
-Success & Challenges:${comment}`;
-navigator.clipboard.writeText(finalText);
+commentCreator.copy();
 }
 
+// Runs once when the page loads.
+// It wires up the pass/fail switch, creates dropdown options, and fills the menus.
 function setup(){
-
-document.getElementById("passSwitch").addEventListener("change",function(){
-document.getElementById("resultLabel").textContent = this.checked
-?
-"FAIL"
-:
-"PASS";
-updatePassFailMenus();
-}
-);
-
-const levelSelect = document.getElementById("level");
-
-Object.keys(levels).forEach(key=>{
-const option = document.createElement("option");
-option.value = key;
-option.textContent = levels[key].name;
-levelSelect.appendChild(option);
-});
-fillYears();
-updateMenus();
+app.setup();
 }
 
 function toggleTheme(){
+// Switches between the dark and light color themes.
 document.body.classList.toggle("light");
 document.getElementById("themeLabel").textContent = document.body.classList.contains("light")
 ?
@@ -985,307 +1600,62 @@ document.getElementById("themeLabel").textContent = document.body.classList.cont
 }
 
 function updatePassFailMenus(){
-const isFail =
-document.getElementById("passSwitch").checked;
-document.getElementById("passOnly").classList.toggle("hidden",isFail);
-document.getElementById("failOnly").classList.toggle("hidden",!isFail);
+// Button-friendly wrapper for the object method.
+levelManager.updatePassFailMenus();
 }
 
 function getNextLevelName(){
-    const keys = Object.keys(levels);
-    const currentKey = document.getElementById("level").value;
-    const index = keys.indexOf(currentKey);
-    if(document.getElementById("passSwitch").checked){
-        return levels[currentKey].name;
-    }
-
-    if(index < keys.length - 1){
-        return levels[keys[index + 1]].name;
-    }
-
-    return levels[currentKey].name;
+    // Kept as a wrapper so older code can still call this function.
+    return levelManager.getNextLevelName();
 }
 
 function fillYears(){
-    const yearSelect = document.getElementById("year");
-    yearSelect.innerHTML = "";
-    for(let year = 2026; year <= 2040; year++){
-        const option = document.createElement("option");
-        option.value = year;
-        option.textContent = year;
-        yearSelect.appendChild(option);
-    }
+    // Kept as a wrapper so older code can still call this function.
+    levelManager.fillYears();
 }
 
 function getCurrentStudentData(){
-let output = document.getElementById("output");
-if((output.value || output.textContent).trim() === ""){
-    generateComment();
-}
-output = document.getElementById("output");
-return {
-    name:document.getElementById("name").value.trim(),
-    instructor:document.getElementById("instructor").value.trim(),
-    season:document.getElementById("season").value,
-    year:document.getElementById("year").value,
-    levelKey:document.getElementById("level").value,
-    level:levels[document.getElementById("level").value].name,
-    passFail:document.getElementById("passSwitch").checked ? "FAIL" : "PASS",
-    nextLevel:getNextLevelName(),
-    comment:(output.value || output.textContent).trim()
-};
+// Kept as a wrapper so older code can still ask for the current student object.
+return formController.collectStudent();
 }
 
 function saveStudent(){
-const student = getCurrentStudentData();
-if(student.name === ""){
-    alert("Enter the student's name before saving.");
-    return;
-}
-if(editingStudentIndex === null){
-    savedStudents.push(student);
-}else{
-    savedStudents[editingStudentIndex] = student;
-    editingStudentIndex = null;
-    document.getElementById("saveStudentButton").textContent = "Save Student";
-}
-localStorage.setItem("savedSwimStudents",JSON.stringify(savedStudents));
-renderSavedStudents();
+// Called by the Save Student / Update Student button.
+studentList.saveCurrent();
 }
 
 function renderSavedStudents(){
-const list = document.getElementById("studentList");
-list.innerHTML = "";
-savedStudents.forEach((student,index)=>{
-const card = document.createElement("div");
-card.className = "student-card";
-card.innerHTML =
-`<div class="student-actions">
-<button class="student-action" type="button" onclick="editStudent(${index})">✏️</button>
-<button class="student-action delete" type="button" onclick="deleteStudent(${index})">🗑️</button>
-</div>
-<div class="student-name">${student.name}</div>
-<div class="student-info">${student.level}</div>
-<div class="student-info">${student.passFail}</div>`;
-list.appendChild(card);
-});
+// Rebuilds the saved-student card grid.
+studentList.render();
 }
 
 function deleteStudent(index){
-savedStudents.splice(index,1);
-localStorage.setItem("savedSwimStudents",JSON.stringify(savedStudents));
-renderSavedStudents();
+// Called by each saved student's Delete button.
+studentList.delete(index);
 }
 
 function deleteAllStudents(){
-if(savedStudents.length === 0){
-    return;
-}
-if(!confirm("Delete all saved students?")){
-    return;
-}
-savedStudents = [];
-editingStudentIndex = null;
-localStorage.removeItem("savedSwimStudents");
-document.getElementById("saveStudentButton").textContent = "Save Student";
-renderSavedStudents()
+// Called by the Delete All button above the saved-student grid.
+studentList.deleteAll();
 }
 
 function editStudent(index){
-
-const student = savedStudents[index];
-
-editingStudentIndex = index;
-
-const levelSelect = document.getElementById("level");
-
-levelSelect.value = student.levelKey;
-
-updateMenus();
-
-document.getElementById("name").value = student.name;
-document.getElementById("instructor").value = student.instructor;
-document.getElementById("season").value = student.season;
-document.getElementById("year").value = student.year;
-document.getElementById("passSwitch").checked = student.passFail === "FAIL";
-document.getElementById("resultLabel").textContent = student.passFail;
-document.getElementById("output").value = student.comment;
-
-document.getElementById("saveStudentButton").textContent = "Update Student";
-
-updatePassFailMenus();
-
-window.scrollTo({top:0,behavior:"smooth"});
-
+// Called by each saved student's Edit button.
+studentList.edit(index);
 }
 
 function loadSavedStudents(){
-
-const saved = localStorage.getItem("savedSwimStudents");
-
-if(saved){
-    savedStudents = JSON.parse(saved);
-}
+// Loads students from localStorage when the page starts.
+studentList.load();
 }
 
 async function exportPDF(){
-
-try{
-
-if(savedStudents.length === 0){
-    alert("Save at least one student before exporting.");
-    return;
+// Called by the Export PDF button.
+return pdfExporter.export();
 }
 
-const existingPdf = await fetch("ZFillableComments.pdf");
-
-if(!existingPdf.ok){
-alert("PDF not found. The file must be named exactly ZFillableComments.pdf and be in the same folder as the HTML.");
-return;
-}
-
-const bytes = await existingPdf.arrayBuffer();
-
-const templatePdf = await PDFLib.PDFDocument.load(bytes);
-
-const templateForm = templatePdf.getForm();
-
-templateForm.flatten();
-
-const pdf = await PDFLib.PDFDocument.create();
-
-const font = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
-
-const form = pdf.getForm();
-
-const fieldBoxes = [
-{
-name:[107,705.5,228,723.5],
-level:[107,681.5,228,699.5],
-instructor:[107,657.5,228,675.5],
-date:[107,633.5,228,651.5],
-next:[150,585.5,228,603.5],
-comment:[255,552,555,718]
-},
-{
-name:[107,479,228,497],
-level:[107,455,228,473],
-instructor:[107,431,228,449],
-date:[107,407,228,425],
-next:[150,359,228,377],
-comment:[255,322,555,492]
-},
-{
-name:[107,246.5,228,264.5],
-level:[107,222.5,228,240.5],
-instructor:[107,198.5,228,216.5],
-date:[107,174.5,228,192.5],
-next:[150,126,228,144],
-comment:[255,92,555,258]
-}
-];
-
-function addField(page,name,text,box,size,multiline){
-
-const field = form.createTextField(name);
-
-field.setText(text);
-
-if(multiline){
-field.enableMultiline();
-}
-
-field.acroField.setDefaultAppearance(
-`/${font.name} ${size} Tf 0 g`
-);
-
-const x = box[0];
-const y = box[1];
-const width = box[2] - box[0];
-const height = box[3] - box[1];
-
-field.addToPage(page,{
-x:x,
-y:y,
-width:width,
-height:height,
-borderWidth:0,
-borderColor:PDFLib.rgb(1,1,1),
-backgroundColor:PDFLib.rgb(1,1,1)
-});
-
-field.acroField.getWidgets().forEach(widget => {
-widget.dict.delete(PDFLib.PDFName.of("Border"));
-widget.dict.delete(PDFLib.PDFName.of("BS"));
-});
-
-}
-
-const pagesNeeded = Math.ceil(savedStudents.length / 3);
-
-for(let pageIndex = 0; pageIndex < pagesNeeded; pageIndex++){
-
-const copiedPages = await pdf.copyPages(templatePdf,[0]);
-
-const page = copiedPages[0];
-
-pdf.addPage(page);
-
-for(let slot = 0; slot < 3; slot++){
-
-const studentIndex =
-pageIndex * 3 + slot;
-
-if(studentIndex >= savedStudents.length){
-    continue;
-}
-
-const student = savedStudents[studentIndex];
-
-const box = fieldBoxes[slot];
-
-const prefix = `student_${studentIndex + 1}`;
-
-addField(page,`${prefix}_name`,student.name,box.name,10,false);
-addField(page,`${prefix}_level`,student.level,box.level,10,false);
-addField(page,`${prefix}_instructor`,student.instructor,box.instructor,10,false);
-addField(page,`${prefix}_date`,`${student.season} ${student.year}`,box.date,10,false);
-addField(page,`${prefix}_next`,student.nextLevel,box.next,10,false);
-addField(page,`${prefix}_comment`,student.comment,box.comment,11,true);
-
-}
-
-}
-
-form.updateFieldAppearances(font);
-
-const result = await pdf.save();
-
-const blob =
-new Blob(
-[result],
-{
-type:"application/pdf"
-}
-);
-
-const url = URL.createObjectURL(blob);
-const a = document.createElement("a");
-a.href = url;
-a.download = "SwimComments.pdf";
-a.click();
-}catch(error){
-console.error(error);
-alert(error.message);
-
-}
-
-}
-
-setup();
-updatePassFailMenus();
-loadSavedStudents();
-renderSavedStudents();
+// Start the app after all functions and objects have been created.
+app.start();
 </script>
 </body>
 </html>
