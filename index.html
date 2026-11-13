@@ -452,8 +452,7 @@ DARK
 <select class="work" id="work3"></select>
 </div>
 
-<!-- Pass-only section.
-     JavaScript hides this when the result is FAIL. -->
+<!-- Second positive skill, shown for both PASS and FAIL comments. -->
 <div id="passOnly">
 <label>Nice thing #2</label>
 <select id="positive2"></select>
@@ -740,10 +739,9 @@ class LevelManager {
     }
 
     // Pass shows two work-on items and one extra nice thing.
-    // Fail shows three work-on items and hides the second nice thing.
+    // Fail shows three work-on items and also includes the second nice thing.
     updatePassFailMenus(){
         const isFail = formController.isFail;
-        formController.get("passOnly").classList.toggle("hidden",isFail);
         formController.get("failOnly").classList.toggle("hidden",!isFail);
     }
 
@@ -1242,13 +1240,14 @@ class CommentCreator {
         let comment;
 
         if(formController.isFail){
-            // Fail comments include one positive note and three work-on notes.
+            // Fail comments include two positive notes and three work-on notes.
             // This gives the parent/student clear next steps for repeating the level.
             comment =
                 `${opening}, ${name}! ${pick(NiceStarters)} ${positiveText1} ` +
                 workLine(work[0]) +
                 workLine(work[1]) +
                 workLine(work[2]) +
+                `${pick(NiceStarters)} ${positiveText2} ` +
                 `${ending}`;
         }else{
             // Pass comments include two positive notes and two work-on notes.
