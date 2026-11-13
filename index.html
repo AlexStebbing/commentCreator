@@ -732,7 +732,34 @@ class LevelManager {
         const levelData = formController.selectedLevel;
         // Build positive choices from the same level skills so every level stays
         // consistent between strengths and work-on areas.
-        const levelPositives = levelData.workOn.map(item=>this.makePositiveFromWorkOn(item));
+        const extraPositives = {
+            "Swimmer 1": [
+                {short:"Safe entries",full:"safe entries and exits. You entered and left the water confidently."},
+                {short:"Jumps",full:"jumps. You showed confidence jumping into the water."},
+                {short:"Bubbles",full:"bubbles. You did well putting your face in the water."},
+                {short:"Floats",full:"floats. You stayed relaxed in the water."},
+                {short:"Glides",full:"glides. You stretched out nicely in the water."},
+                {short:"Kicking",full:"kicking. You worked hard moving through the water."}
+            ],
+            "Swimmer 2": [
+                {short:"Jumps",full:"jumps. You showed confidence entering the water."},
+                {short:"Picking up rings",full:"ring pickup. You did well retrieving rings underwater."},
+                {short:"Underwater skills",full:"underwater skills. You showed confidence putting your face in the water."},
+                {short:"Glides",full:"glides. You stretched out nicely in the water."},
+                {short:"Front crawl",full:"front crawl. You worked hard moving through the water."},
+                {short:"Back crawl",full:"back crawl. You showed good effort swimming on your back."}
+            ],
+            "Swimmer 3": [
+                {short:"Jumps",full:"jumps. You showed confidence entering the water."},
+                {short:"Retrieving rings",full:"ring pickup. You did well retrieving rings underwater."},
+                {short:"Steady kicking",full:"kicking. You kept your legs moving steadily."},
+                {short:"Front crawl breathing",full:"front crawl breathing. You worked hard turning to breathe."},
+                {short:"Back crawl",full:"back crawl. You showed good control swimming on your back."},
+                {short:"Treading water",full:"treading water. You worked hard staying at the surface."}
+            ]
+        };
+        const levelPositives = levelData.workOn.map(item=>this.makePositiveFromWorkOn(item))
+            .concat(extraPositives[levelData.name] || []);
         this.fillSelect(formController.get("positive1"),levelPositives);
         this.fillSelect(formController.get("positive2"),levelPositives);
         formController.workMenus.forEach(menu=>this.fillSelect(menu,levelData.workOn));
