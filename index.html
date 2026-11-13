@@ -480,8 +480,9 @@ DARK
 <div id="studentList" class="student-grid"></div>
 </div>
 
-<!-- PDF export.
-     This uses all saved students, not just the student currently in the form. -->
+<!-- Export all saved students with the chosen PDF filename. -->
+<label for="pdfFileName">PDF file name</label>
+<input id="pdfFileName" type="text" value="SwimComments" placeholder="SwimComments" maxlength="120">
 <button onclick="exportPDF()" type="button">Export PDF</button>
 <script>
 
@@ -1548,7 +1549,13 @@ class PdfExporter {
             const a = document.createElement("a");
 
             a.href = url;
-            a.download = "SwimComments.pdf";
+            // Keep the downloaded name usable across common operating systems.
+            const requestedName = document.getElementById("pdfFileName").value
+                .replace(/[<>:"/\\|?*\x00-\x1f]/g,"_")
+                .trim()
+                .replace(/[. ]+$/,"");
+            const baseName = requestedName || "SwimComments";
+            a.download = /\.pdf$/i.test(baseName) ? baseName : `${baseName}.pdf`;
             a.click();
         }catch(error){
             console.error(error);
